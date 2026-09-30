@@ -179,5 +179,17 @@
 
   </main>
 
+  <script>
+  const playButton = document.querySelector(".play");
+
+  let playing = false;
+
+  playButton.addEventListener("click", () => {
+    playing = !playing;
+    playButton.textContent = playing ? "❚❚" : "▶";
+  });
+</script>
+
+  
 </body>
 </html>
