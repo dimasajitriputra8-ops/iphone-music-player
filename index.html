@@ -149,6 +149,7 @@
 
     <div class="cover"></div>
     <input type="file" id="audioFile" accept="audio/*">
+    <audio id="audio"></audio>
 
     <div class="info">
       <div class="title">Your Song</div>
@@ -181,14 +182,41 @@
   </main>
 
   <script>
-  const playButton = document.querySelector(".play");
+  const audio = document.getElementById("audio");
+const audioFile = document.getElementById("audioFile");
+const playButton = document.querySelector(".play");
 
-  let playing = false;
+let playing = false;
 
-  playButton.addEventListener("click", () => {
-    playing = !playing;
-    playButton.textContent = playing ? "❚❚" : "▶";
-  });
+audioFile.addEventListener("change", function () {
+  const file = this.files[0];
+
+  if (file) {
+    audio.src = URL.createObjectURL(file);
+    audio.load();
+  }
+});
+
+playButton.addEventListener("click", function () {
+  if (!audio.src) {
+    alert("Pilih lagu terlebih dahulu.");
+    return;
+  }
+
+  if (audio.paused) {
+    audio.play();
+    playButton.textContent = "❚❚";
+  } else {
+    audio.pause();
+    playButton.textContent = "▶";
+  }
+});
+
+audio.addEventListener("ended", function () {
+  playButton.textContent = "▶";
+});
+
+    
 </script>
 
   
