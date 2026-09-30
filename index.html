@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>iPhone Music Player</title>
 
   <style>
@@ -19,26 +20,164 @@
       font-family: Arial, Helvetica, sans-serif;
       display: flex;
       justify-content: center;
-      align-items: center;
     }
 
     .player {
       width: 100%;
       max-width: 430px;
       min-height: 100vh;
-      padding: 25px 22px;
+      padding: 28px 22px 25px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .top {
+      text-align: center;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .cover {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 14px;
+      background:
+        linear-gradient(135deg, #4b176d, #16002c 55%, #000);
+      box-shadow: 0 20px 60px rgba(100, 0, 160, 0.35);
+    }
+
+    .info {
+      margin-top: 25px;
+      overflow: hidden;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .artist {
+      margin-top: 6px;
+      color: #aaa;
+      font-size: 16px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .visualizer {
+      height: 150px;
+      margin-top: 25px;
+      border: 1px solid #292929;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #050505;
+    }
+
+    .spectrum {
+      font-size: 38px;
+      letter-spacing: 2px;
+      color: #ff8a00;
+    }
+
+    .progress {
+      margin-top: 20px;
+    }
+
+    .bar {
+      height: 4px;
+      background: #444;
+      border-radius: 10px;
+    }
+
+    .times {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      color: #888;
+      font-size: 12px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 45px;
+      margin-top: 20px;
+    }
+
+    button {
+      border: none;
+      background: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    .skip {
+      font-size: 32px;
+    }
+
+    .play {
+      font-size: 42px;
+    }
+
+    .volume {
+      margin-top: 25px;
+    }
+
+    .volume-bar {
+      width: 100%;
+      height: 4px;
+      background: #444;
+      border-radius: 10px;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="player">
+  <main class="player">
 
-  </div>
+    <div class="top">
+      Music
+    </div>
+
+    <div class="cover"></div>
+
+    <div class="info">
+      <div class="title">Your Song</div>
+      <div class="artist">Your Artist</div>
+    </div>
+
+    <div class="visualizer">
+      <div class="spectrum">▂▅▇▃▆▂▇▅▃</div>
+    </div>
+
+    <div class="progress">
+      <div class="bar"></div>
+
+      <div class="times">
+        <span>0:00</span>
+        <span>0:00</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="skip">«</button>
+      <button class="play">▶</button>
+      <button class="skip">»</button>
+    </div>
+
+    <div class="volume">
+      <div class="volume-bar"></div>
+    </div>
+
+  </main>
 
 </body>
 </html>
