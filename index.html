@@ -100,6 +100,8 @@ body {
   position: absolute;
   inset: -70px;
 
+  display: block;
+
   width: calc(100% + 140px);
   height: calc(100% + 140px);
 
@@ -2237,62 +2239,55 @@ function setArtwork(src) {
   currentArtwork = src;
   lastArtworkUrl = src;
 
-
   /* ========================================
-     1. GANTI ALBUM UTAMA
+     1. ALBUM ART UTAMA
      ======================================== */
 
   albumArt.src = src;
 
 
   /* ========================================
-     2. GANTI BACKGROUND
+     2. BACKGROUND IKUT ALBUM ART
      ======================================== */
 
+  // Pastikan background selalu terlihat
+  backgroundArt.style.display = "block";
+
+  // Fade out sebentar
   backgroundArt.style.opacity = "0";
 
+  // Tunggu browser mengganti gambar
+  backgroundArt.onload = () => {
 
-  const newBackground = new Image();
+    backgroundArt.style.display = "block";
 
-  newBackground.onload = () => {
+    // Mulai sedikit zoom
+    backgroundArt.style.transform = "scale(1.18)";
 
-    backgroundArt.src = src;
-
-    backgroundArt.style.transform =
-      "scale(1.18)";
-
-    backgroundArt.style.opacity =
-      "0.94";
-
-
+    // Fade masuk
     requestAnimationFrame(() => {
-
-      setTimeout(() => {
-
-        backgroundArt.style.transform =
-          "scale(1.12)";
-
-      }, 50);
-
+      backgroundArt.style.opacity = "0.94";
     });
 
-  };
-
-
-  newBackground.onerror = () => {
-
-    /* Kalau gambar gagal dibaca,
-       tetap gunakan src langsung. */
-
-    backgroundArt.src = src;
-
-    backgroundArt.style.opacity =
-      "0.94";
+    // Kembali ke posisi normal
+    setTimeout(() => {
+      backgroundArt.style.transform = "scale(1.12)";
+    }, 80);
 
   };
 
+  // Kalau gambar gagal, jangan matikan background
+  backgroundArt.onerror = () => {
 
-  newBackground.src = src;
+    backgroundArt.style.display = "block";
+    backgroundArt.style.opacity = "0.94";
+
+  };
+
+  // INI YANG PALING PENTING:
+  // background menggunakan gambar yang SAMA
+  // dengan album utama
+  backgroundArt.src = src;
 
 
   /* ========================================
@@ -2300,7 +2295,6 @@ function setArtwork(src) {
      ======================================== */
 
   islandThumb.src = src;
-
   islandExpandedArt.src = src;
 
 
@@ -2319,13 +2313,11 @@ function setArtwork(src) {
     ],
     {
       duration: 420,
-      easing:
-        "cubic-bezier(.16,1,.3,1)"
+      easing: "cubic-bezier(.16,1,.3,1)"
     }
   );
 
 }
-
 
 /* =========================================================
    UPDATE ARTIST
@@ -4054,20 +4046,6 @@ albumArt.addEventListener(
     showToast(
       "1000848962.jpg belum ditemukan di folder."
     );
-  }
-);
-
-
-/* =========================================================
-   HANDLE BACKGROUND FAILURE
-   ========================================================= */
-
-backgroundArt.addEventListener(
-  "error",
-  () => {
-
-    backgroundArt.style.display =
-      "none";
   }
 );
 
