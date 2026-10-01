@@ -2,22 +2,20 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
->
-
-<meta name="theme-color" content="#050509">
-
-<title>Music Player</title>
+<title>iPhone Music Player</title>
 
 <style>
 
 *{
-    box-sizing:border-box;
     margin:0;
     padding:0;
+    box-sizing:border-box;
     -webkit-tap-highlight-color:transparent;
 }
 
@@ -26,46 +24,52 @@ body{
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#050509;
-    color:white;
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "SF Pro Display",
-        "SF Pro Text",
-        "Segoe UI",
-        sans-serif;
+    background:#000;
+    font-family:-apple-system,
+                BlinkMacSystemFont,
+                "SF Pro Display",
+                "SF Pro Text",
+                Arial,
+                sans-serif;
 }
 
 body{
-    position:relative;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    color:white;
 }
 
 /* =========================================================
    BACKGROUND
 ========================================================= */
 
+.player{
+    position:relative;
+
+    width:100vw;
+    height:100vh;
+
+    min-height:100svh;
+
+    overflow:hidden;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:#111;
+}
+
 .background{
-    position:fixed;
+    position:absolute;
     inset:-8%;
-    z-index:0;
 
-    background-image:
-        linear-gradient(
-            rgba(0,0,0,.48),
-            rgba(0,0,0,.58)
-        ),
-        var(--bg-image);
-
+    background-image:url("cover.jpg");
     background-position:center;
     background-size:cover;
-    background-repeat:no-repeat;
 
     filter:blur(35px);
     transform:scale(1.12);
+
+    opacity:.72;
 
     transition:
         background-image .5s ease,
@@ -74,1054 +78,589 @@ body{
 
 .background::after{
     content:"";
+
     position:absolute;
     inset:0;
 
     background:
-        radial-gradient(
-            circle at 50% 45%,
-            rgba(0,0,0,.02),
-            rgba(0,0,0,.6)
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.25),
+            rgba(0,0,0,.48)
         );
 }
 
 /* =========================================================
-   MAIN PLAYER
+   MAIN CONTENT
 ========================================================= */
 
-.player{
+.content{
     position:relative;
-    z-index:2;
+    z-index:5;
 
-    width:min(100vw, 430px);
-    height:100dvh;
-    min-height:560px;
-
-    padding:
-        max(22px, env(safe-area-inset-top))
-        20px
-        max(20px, env(safe-area-inset-bottom))
-        20px;
+    width:min(100%,520px);
+    height:100%;
 
     display:flex;
     flex-direction:column;
 
+    padding:
+        max(38px,env(safe-area-inset-top))
+        22px
+        max(30px,env(safe-area-inset-bottom))
+        22px;
+
     overflow:hidden;
-
-    isolation:isolate;
-}
-
-/* subtle darkness over entire interface */
-
-.player::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    z-index:-1;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(0,0,0,.10) 0%,
-            rgba(0,0,0,.08) 40%,
-            rgba(0,0,0,.20) 100%
-        );
-}
-
-/* =========================================================
-   TOP BAR
-========================================================= */
-
-.topbar{
-    height:42px;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    flex-shrink:0;
-}
-
-.top-title{
-    font-size:13px;
-    font-weight:600;
-
-    color:rgba(255,255,255,.72);
-
-    letter-spacing:.2px;
-}
-
-.menu-button{
-    width:38px;
-    height:38px;
-
-    border:0;
-    background:rgba(255,255,255,.08);
-
-    border-radius:50%;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    color:white;
-
-    cursor:pointer;
-
-    backdrop-filter:blur(12px);
-    -webkit-backdrop-filter:blur(12px);
-}
-
-.menu-button:active{
-    transform:scale(.92);
-}
-
-.menu-dots{
-    display:flex;
-    gap:3px;
-}
-
-.menu-dots span{
-    width:3px;
-    height:3px;
-    background:white;
-    border-radius:50%;
 }
 
 /* =========================================================
    COVER
 ========================================================= */
 
-.cover-section{
+.cover-area{
     width:100%;
-
-    margin-top:15px;
 
     display:flex;
     justify-content:center;
 
-    flex-shrink:0;
+    margin-top:5vh;
 }
 
-.cover-wrap{
-    position:relative;
-
-    width:100%;
+.cover{
+    width:min(82vw,390px);
     aspect-ratio:1 / 1;
 
-    max-height:46vh;
+    object-fit:cover;
 
-    border-radius:25px;
+    border-radius:18px;
 
-    overflow:hidden;
-
-    background:#111;
+    display:block;
 
     box-shadow:
-        0 18px 55px rgba(0,0,0,.42),
-        0 0 30px rgba(0,0,0,.12);
+        0 18px 45px rgba(0,0,0,.35);
 
     cursor:pointer;
 
     transition:
-        transform .2s ease,
-        border-radius .3s ease;
+        transform .25s ease,
+        opacity .2s ease;
 }
 
-.cover-wrap:active{
-    transform:scale(.985);
-}
-
-.cover{
-    width:100%;
-    height:100%;
-
-    display:block;
-
-    object-fit:cover;
-
-    user-select:none;
-    -webkit-user-drag:none;
-}
-
-.cover-overlay{
-    position:absolute;
-    inset:0;
-
-    display:flex;
-    align-items:flex-end;
-    justify-content:center;
-
-    padding-bottom:18px;
-
-    opacity:0;
-
-    background:
-        linear-gradient(
-            transparent 55%,
-            rgba(0,0,0,.55)
-        );
-
-    transition:opacity .2s ease;
-
-    pointer-events:none;
-}
-
-.cover-wrap:hover .cover-overlay{
-    opacity:1;
-}
-
-.cover-change-label{
-    padding:9px 14px;
-
-    border-radius:999px;
-
-    background:rgba(0,0,0,.52);
-
-    backdrop-filter:blur(12px);
-
-    font-size:12px;
-    font-weight:600;
+.cover:active{
+    transform:scale(.97);
 }
 
 /* =========================================================
-   SONG INFO
+   SONG INFORMATION
 ========================================================= */
 
-.song-info{
+.info{
     width:100%;
 
-    margin-top:18px;
+    margin-top:25px;
 
-    flex-shrink:0;
-
-    min-width:0;
+    overflow:hidden;
 }
 
-.title-window{
+.title{
     width:100%;
+
+    font-size:25px;
+    font-weight:700;
+
+    line-height:1.2;
+
+    white-space:nowrap;
 
     overflow:hidden;
 
-    white-space:nowrap;
+    text-shadow:
+        0 2px 8px rgba(0,0,0,.3);
 }
 
-.song-title{
+.artist{
+    margin-top:5px;
+
+    font-size:19px;
+    font-weight:400;
+
+    color:rgba(255,255,255,.68);
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-shadow:
+        0 2px 7px rgba(0,0,0,.25);
+
+    cursor:pointer;
+}
+
+/* =========================================================
+   MARQUEE
+========================================================= */
+
+.marquee{
     display:inline-block;
 
-    max-width:100%;
-
-    font-size:23px;
-    line-height:1.15;
-
-    font-weight:700;
-
-    letter-spacing:-.4px;
-
-    white-space:nowrap;
-}
-
-.song-title.scrolling{
-    padding-right:55px;
+    padding-right:60px;
 
     animation:
-        titleScroll 10s
-        ease-in-out
-        infinite;
+        marquee 9s linear infinite;
 }
 
-@keyframes titleScroll{
+@keyframes marquee{
 
-    0%,
+    0%{
+        transform:translateX(0);
+    }
+
     20%{
         transform:translateX(0);
     }
 
-    50%,
-    70%{
+    80%{
         transform:translateX(
-            calc(-1 * var(--scroll-distance))
+            calc(-100% + 100vw)
         );
     }
 
     100%{
-        transform:translateX(0);
+        transform:translateX(
+            calc(-100% + 100vw)
+        );
     }
-}
 
-.artist-row{
-    display:flex;
-    align-items:center;
-
-    margin-top:5px;
-
-    width:100%;
-}
-
-.artist{
-    font-size:16px;
-
-    color:rgba(255,255,255,.63);
-
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-
-    max-width:calc(100% - 40px);
-}
-
-.edit-artist{
-    margin-left:8px;
-
-    width:25px;
-    height:25px;
-
-    border:0;
-    background:transparent;
-
-    color:rgba(255,255,255,.65);
-
-    cursor:pointer;
-
-    font-size:14px;
 }
 
 /* =========================================================
-   SPECTRUM AREA
+   PROGRESS
 ========================================================= */
 
-.visualizer-zone{
-
+.progress-area{
     width:100%;
 
-    margin-top:20px;
-
-    position:relative;
-
-    height:110px;
-
-    flex-shrink:0;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    overflow:hidden;
+    margin-top:25px;
 }
 
-/*
-    Ini adalah "kotak" area spectrum.
-    Tidak diberi background supaya spectrum tetap seperti
-    referensi AVEE / gambar kedua.
-*/
-
-.spectrum-box{
-
+.progress{
     position:relative;
 
     width:100%;
-    height:100%;
+    height:5px;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    border-radius:10px;
+
+    background:
+        rgba(255,255,255,.28);
 
     overflow:hidden;
-}
-
-#spectrum{
-    width:100%;
-    height:100%;
-
-    display:block;
-
-    overflow:visible;
-}
-
-/*
-    Tombol tengah hanya icon.
-    TIDAK ADA background.
-*/
-
-.center-play{
-    position:absolute;
-
-    left:50%;
-    top:50%;
-
-    transform:
-        translate(-50%, -50%);
-
-    width:64px;
-    height:64px;
-
-    border:0;
-    outline:none;
-
-    background:transparent;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    color:white;
 
     cursor:pointer;
-
-    z-index:10;
-
-    filter:
-        drop-shadow(
-            0 0 8px
-            rgba(255,255,255,.25)
-        );
-
-    transition:
-        transform .15s ease,
-        filter .2s ease;
 }
 
-.center-play:active{
-    transform:
-        translate(-50%, -50%)
-        scale(.86);
-}
+.progress-fill{
+    position:absolute;
 
-.center-play:hover{
-    filter:
-        drop-shadow(
-            0 0 14px
-            rgba(255,255,255,.5)
-        );
-}
+    left:0;
+    top:0;
 
-.play-icon{
-    width:0;
-    height:0;
+    width:0%;
+    height:100%;
 
-    border-top:13px solid transparent;
-    border-bottom:13px solid transparent;
-    border-left:19px solid white;
-
-    margin-left:5px;
-}
-
-.pause-icon{
-    display:flex;
-
-    gap:6px;
-}
-
-.pause-icon span{
-    width:7px;
-    height:28px;
-
-    border-radius:3px;
+    border-radius:10px;
 
     background:white;
+
+    transition:width .05s linear;
+}
+
+.time-row{
+    width:100%;
+
+    display:flex;
+    justify-content:space-between;
+
+    margin-top:8px;
+
+    font-size:14px;
+
+    color:rgba(255,255,255,.72);
 }
 
 /* =========================================================
-   SKIP BUTTONS
+   MAIN CONTROL AREA
 ========================================================= */
 
-.skip-button{
-    position:absolute;
+.controls{
+    width:100%;
 
-    top:50%;
+    margin-top:35px;
 
-    width:72px;
-    height:72px;
+    display:flex;
 
-    transform:translateY(-50%);
+    justify-content:center;
+    align-items:center;
+
+    gap:clamp(30px,9vw,55px);
+}
+
+/* previous / next */
+
+.skip{
+    width:52px;
+    height:52px;
 
     border:0;
+    outline:0;
 
-    background:transparent;
+    background:none;
 
     color:white;
 
     display:flex;
-    align-items:center;
     justify-content:center;
+    align-items:center;
 
     cursor:pointer;
 
-    z-index:9;
+    opacity:.96;
+}
 
-    filter:
-        drop-shadow(
-            0 0 7px
-            rgba(255,255,255,.15)
-        );
+.skip svg{
+    width:40px;
+    height:40px;
+
+    fill:white;
+}
+
+.skip:active{
+    transform:scale(.87);
+}
+
+/* =========================================================
+   SPECTRUM
+========================================================= */
+
+.spectrum-button{
+    position:relative;
+
+    width:90px;
+    height:65px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    overflow:hidden;
+
+    background:none;
+    border:0;
+
+    cursor:pointer;
+}
+
+.spectrum{
+    position:absolute;
+
+    left:0;
+    right:0;
+
+    top:50%;
+
+    transform:
+        translateY(-50%);
+
+    height:55px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:2px;
+
+    overflow:hidden;
+
+    opacity:.9;
 
     transition:
-        transform .15s ease,
+        opacity .25s ease;
+}
+
+.bar{
+    width:2px;
+
+    min-height:5px;
+
+    height:15px;
+
+    border-radius:4px;
+
+    background:
+        rgba(255,255,255,.9);
+
+    box-shadow:
+        0 0 7px
+        rgba(255,255,255,.28);
+
+    transform-origin:center;
+
+    transition:
+        background .12s linear,
+        height .06s linear,
         opacity .2s ease;
 }
 
-.skip-button:active{
-    transform:
-        translateY(-50%)
-        scale(.86);
+.bar.played{
+    background:#ff7a18;
+
+    box-shadow:
+        0 0 8px
+        rgba(255,110,20,.5);
 }
 
-.skip-left{
-    left:3px;
-}
+/* play pause */
 
-.skip-right{
-    right:3px;
-}
-
-.skip-symbol{
+.play-icon{
     position:relative;
 
-    width:44px;
-    height:30px;
+    z-index:20;
+
+    width:34px;
+    height:42px;
 
     display:flex;
+    justify-content:center;
     align-items:center;
+
+    color:white;
+
+    filter:
+        drop-shadow(
+            0 2px 6px
+            rgba(0,0,0,.4)
+        );
+
+    pointer-events:none;
 }
 
-.triangle{
-    width:0;
-    height:0;
+.play-icon svg{
+    width:35px;
+    height:35px;
 
-    border-top:14px solid transparent;
-    border-bottom:14px solid transparent;
-    border-right:19px solid white;
-}
-
-.triangle.right{
-    border-right:0;
-    border-left:19px solid white;
-}
-
-.skip-lines{
-    position:absolute;
-
-    width:4px;
-    height:27px;
-
-    border-radius:2px;
-
-    background:white;
-}
-
-.skip-left .skip-lines{
-    right:1px;
-}
-
-.skip-right .skip-lines{
-    left:1px;
-}
-
-/* =========================================================
-   TIME
-========================================================= */
-
-.time-row{
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    margin-top:5px;
-
-    font-size:12px;
-
-    color:rgba(255,255,255,.7);
-
-    font-variant-numeric:tabular-nums;
-
-    flex-shrink:0;
+    fill:white;
 }
 
 /* =========================================================
    VOLUME
 ========================================================= */
 
-.volume-section{
-
+.volume-area{
     width:100%;
 
-    margin-top:20px;
-
-    flex-shrink:0;
+    margin-top:32px;
 
     display:flex;
     align-items:center;
 
-    gap:10px;
+    gap:11px;
 }
 
 .volume-icon{
-
-    width:23px;
-
-    flex-shrink:0;
-
-    color:rgba(255,255,255,.75);
-
-    display:flex;
-    justify-content:center;
-}
-
-.volume-icon svg{
-    width:20px;
-    height:20px;
-    fill:currentColor;
-}
-
-.volume-slider{
-
-    position:relative;
-
-    width:100%;
-    height:22px;
-
-    display:flex;
-    align-items:center;
-}
-
-.volume-track{
-
-    position:absolute;
-
-    left:0;
-    right:0;
-
-    height:5px;
-
-    border-radius:999px;
-
-    background:rgba(255,255,255,.23);
-
-    overflow:hidden;
-}
-
-.volume-fill{
-
-    position:absolute;
-
-    left:0;
-    top:0;
-    bottom:0;
-
-    width:80%;
-
-    border-radius:999px;
-
-    background:rgba(255,255,255,.82);
-}
-
-input[type="range"]{
-
-    position:absolute;
-
-    inset:0;
-
-    width:100%;
-    height:100%;
-
-    margin:0;
-
-    opacity:0;
-
-    cursor:pointer;
-}
-
-/* =========================================================
-   AIRPLAY-LIKE BUTTON
-========================================================= */
-
-.output-button{
-
-    align-self:center;
-
-    margin-top:18px;
-
-    border:0;
-
-    min-width:155px;
-    height:48px;
-
-    padding:0 20px;
-
-    border-radius:999px;
-
-    background:rgba(255,255,255,.15);
-
-    color:white;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    gap:9px;
-
-    font-size:15px;
-    font-weight:500;
-
-    backdrop-filter:blur(15px);
-    -webkit-backdrop-filter:blur(15px);
-
-    cursor:pointer;
-
-    flex-shrink:0;
-}
-
-.output-button:active{
-    transform:scale(.96);
-}
-
-.output-icon{
     width:22px;
     height:22px;
 
+    opacity:.85;
+
+    flex:none;
+}
+
+.volume-icon svg{
+    width:100%;
+    height:100%;
+
+    fill:white;
+}
+
+.volume-slider{
     position:relative;
-}
 
-.output-icon::before{
-    content:"";
-
-    position:absolute;
-
-    width:17px;
-    height:17px;
-
-    left:2px;
-    top:0;
-
-    border:
-        2px solid
-        rgba(255,255,255,.9);
-
-    border-radius:50%;
-
-    border-bottom-color:transparent;
-}
-
-.output-icon::after{
-    content:"";
-
-    position:absolute;
-
-    left:7px;
-    bottom:0;
-
-    width:0;
-    height:0;
-
-    border-left:5px solid transparent;
-    border-right:5px solid transparent;
-    border-bottom:6px solid white;
-}
-
-/* =========================================================
-   BOTTOM SPACE
-========================================================= */
-
-.bottom-space{
     flex:1;
-    min-height:5px;
-}
 
-/* =========================================================
-   MODAL
-========================================================= */
+    height:5px;
 
-.modal-backdrop{
-
-    position:fixed;
-    inset:0;
-
-    z-index:100;
-
-    display:none;
-
-    align-items:flex-end;
-    justify-content:center;
-
-    background:rgba(0,0,0,.45);
-
-    backdrop-filter:blur(7px);
-    -webkit-backdrop-filter:blur(7px);
-}
-
-.modal-backdrop.show{
-    display:flex;
-}
-
-.modal{
-
-    width:min(430px,100%);
-
-    padding:
-        20px
-        20px
-        max(25px, env(safe-area-inset-bottom));
-
-    border-radius:
-        25px
-        25px
-        0
-        0;
+    border-radius:10px;
 
     background:
-        rgba(27,27,32,.92);
-
-    box-shadow:
-        0 -10px 40px rgba(0,0,0,.4);
-
-    transform:translateY(100%);
-
-    transition:
-        transform .28s cubic-bezier(.2,.8,.2,1);
-}
-
-.modal-backdrop.show .modal{
-    transform:translateY(0);
-}
-
-.modal-handle{
-
-    width:42px;
-    height:4px;
-
-    margin:
-        0 auto
-        20px;
-
-    border-radius:99px;
-
-    background:rgba(255,255,255,.25);
-}
-
-.modal h2{
-
-    font-size:20px;
-
-    margin-bottom:16px;
-}
-
-.modal-button{
-
-    width:100%;
-    height:50px;
-
-    margin-top:10px;
-
-    border:0;
-
-    border-radius:14px;
-
-    color:white;
-
-    background:rgba(255,255,255,.09);
-
-    font-size:15px;
-    font-weight:600;
-
-    text-align:left;
-
-    padding:0 16px;
+        rgba(255,255,255,.28);
 
     cursor:pointer;
 }
 
-.modal-button:active{
-    background:rgba(255,255,255,.16);
-}
+.volume-fill{
+    position:absolute;
 
-.modal-button.primary{
-    background:rgba(255,255,255,.15);
-}
+    left:0;
+    top:0;
 
-.modal-button.danger{
-    color:#ff7777;
+    height:100%;
+
+    width:70%;
+
+    border-radius:10px;
+
+    background:white;
 }
 
 /* =========================================================
-   EDIT MODAL
+   AIRPLAY STYLE
 ========================================================= */
 
-.edit-box{
+.output{
+    display:flex;
+    justify-content:center;
 
-    position:fixed;
-    inset:0;
+    margin-top:28px;
+}
 
-    z-index:110;
+.output-button{
+    min-width:165px;
 
-    display:none;
+    height:52px;
 
+    padding:0 22px;
+
+    border:none;
+
+    border-radius:28px;
+
+    background:
+        rgba(255,255,255,.15);
+
+    backdrop-filter:
+        blur(15px);
+
+    -webkit-backdrop-filter:
+        blur(15px);
+
+    color:white;
+
+    display:flex;
     align-items:center;
     justify-content:center;
 
-    padding:20px;
-
-    background:rgba(0,0,0,.5);
-
-    backdrop-filter:blur(10px);
-}
-
-.edit-box.show{
-    display:flex;
-}
-
-.edit-card{
-
-    width:min(390px,100%);
-
-    padding:22px;
-
-    border-radius:23px;
-
-    background:
-        rgba(28,28,34,.96);
-
-    box-shadow:
-        0 20px 70px rgba(0,0,0,.5);
-}
-
-.edit-card h2{
-    font-size:20px;
-    margin-bottom:18px;
-}
-
-.input-label{
-
-    display:block;
-
-    font-size:12px;
-
-    color:rgba(255,255,255,.55);
-
-    margin:
-        12px
-        0
-        6px;
-}
-
-.text-input{
-
-    width:100%;
-    height:48px;
-
-    border:1px solid
-        rgba(255,255,255,.1);
-
-    border-radius:13px;
-
-    outline:none;
-
-    background:
-        rgba(255,255,255,.07);
-
-    color:white;
-
-    padding:0 14px;
-
-    font-size:15px;
-}
-
-.text-input:focus{
-    border-color:
-        rgba(255,255,255,.35);
-}
-
-.edit-actions{
-
-    display:flex;
-
     gap:10px;
 
-    margin-top:18px;
-}
+    font-size:17px;
 
-.edit-actions button{
-
-    flex:1;
-
-    height:46px;
-
-    border:0;
-
-    border-radius:13px;
-
-    color:white;
-
-    background:
-        rgba(255,255,255,.09);
-
-    font-weight:600;
+    box-shadow:
+        inset 0 1px 1px
+        rgba(255,255,255,.1);
 
     cursor:pointer;
 }
 
-.edit-actions .save{
-    background:white;
-    color:#111;
+.output-button svg{
+    width:24px;
+    height:24px;
+
+    fill:white;
 }
 
 /* =========================================================
-   HIDDEN FILE INPUTS
+   EDIT BUTTONS
 ========================================================= */
 
-.hidden-file{
+.edit-panel{
+    position:absolute;
+
+    z-index:50;
+
+    left:50%;
+    bottom:20px;
+
+    transform:
+        translateX(-50%);
+
+    display:flex;
+
+    gap:8px;
+}
+
+.edit-button{
+    border:none;
+
+    padding:9px 14px;
+
+    border-radius:20px;
+
+    background:
+        rgba(0,0,0,.45);
+
+    color:white;
+
+    backdrop-filter:blur(12px);
+
+    font-size:12px;
+
+    opacity:.7;
+
+    cursor:pointer;
+}
+
+/* =========================================================
+   FILE INPUT
+========================================================= */
+
+input[type="file"]{
     display:none;
 }
 
 /* =========================================================
-   SMALL SCREEN
+   MOBILE
 ========================================================= */
 
-@media(max-height:700px){
+@media(max-height:720px){
 
-    .player{
-        padding-top:
-            max(13px, env(safe-area-inset-top));
-
-        padding-bottom:
-            max(13px, env(safe-area-inset-bottom));
+    .cover-area{
+        margin-top:2vh;
     }
 
-    .cover-section{
-        margin-top:8px;
+    .cover{
+        width:min(68vw,300px);
     }
 
-    .cover-wrap{
-        max-height:38vh;
+    .info{
+        margin-top:16px;
     }
 
-    .song-info{
-        margin-top:12px;
+    .progress-area{
+        margin-top:17px;
     }
 
-    .visualizer-zone{
-        margin-top:12px;
-        height:90px;
+    .controls{
+        margin-top:22px;
     }
 
-    .volume-section{
-        margin-top:12px;
+    .volume-area{
+        margin-top:20px;
     }
 
-    .output-button{
-        margin-top:10px;
-        height:42px;
+    .output{
+        margin-top:17px;
     }
 }
 
-@media(min-width:431px){
+@media(min-width:700px){
 
-    .player{
-        border-left:
-            1px solid rgba(255,255,255,.04);
+    .content{
+        width:430px;
+    }
 
-        border-right:
-            1px solid rgba(255,255,255,.04);
+    .cover{
+        width:360px;
     }
 }
 
@@ -1130,429 +669,302 @@ input[type="range"]{
 
 <body>
 
-<!-- ======================================================
-     BLURRED BACKGROUND
-====================================================== -->
+<div class="player">
 
-<div
-    class="background"
-    id="background"
-    style="
-        --bg-image:
-        url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1200&q=85');
-    "
-></div>
-
-
-<!-- ======================================================
-     MAIN PLAYER
-====================================================== -->
-
-<main class="player">
-
-    <!-- TOP -->
-    <div class="topbar">
-
-        <div class="top-title">
-            MUSIC
-        </div>
-
-        <button
-            class="menu-button"
-            id="menuButton"
-            aria-label="Menu"
-        >
-            <div class="menu-dots">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </button>
-
+    <!-- BACKGROUND BLUR -->
+    <div
+        class="background"
+        id="background">
     </div>
 
 
-    <!-- COVER -->
-    <section class="cover-section">
+    <!-- MAIN -->
+    <main class="content">
 
-        <div
-            class="cover-wrap"
-            id="coverWrap"
-            title="Tekan untuk mengganti cover"
-        >
+
+        <!-- COVER -->
+        <div class="cover-area">
 
             <img
                 id="cover"
                 class="cover"
-                src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1000&q=90"
-                alt="Album Cover"
-            >
+                src="cover.jpg"
+                alt="Album Cover">
 
-            <div class="cover-overlay">
-                <div class="cover-change-label">
-                    Ganti Foto
-                </div>
-            </div>
+            <input
+                type="file"
+                id="imageInput"
+                accept="image/*">
 
         </div>
 
-    </section>
 
+        <!-- INFORMATION -->
+        <div class="info">
 
-    <!-- SONG INFO -->
-    <section class="song-info">
-
-        <div
-            class="title-window"
-            id="titleWindow"
-        >
             <div
-                class="song-title"
-                id="songTitle"
-            >
-                Music Player
+                id="title"
+                class="title">
+                No Music Selected
             </div>
-        </div>
-
-        <div class="artist-row">
 
             <div
+                id="artist"
                 class="artist"
-                id="artistName"
-            >
-                Unknown Artist
+                title="Klik untuk mengganti artist">
+                Artist
             </div>
 
-            <button
-                class="edit-artist"
-                id="editArtistButton"
-                aria-label="Edit artist"
-            >
-                ✎
-            </button>
+        </div>
+
+
+        <!-- PROGRESS -->
+        <div class="progress-area">
+
+            <div
+                class="progress"
+                id="progress">
+
+                <div
+                    class="progress-fill"
+                    id="progressFill">
+                </div>
+
+            </div>
+
+            <div class="time-row">
+
+                <span id="currentTime">
+                    0:00
+                </span>
+
+                <span id="duration">
+                    -0:00
+                </span>
+
+            </div>
 
         </div>
 
-    </section>
+
+        <!-- CONTROLS -->
+        <div class="controls">
 
 
-    <!-- ==================================================
-         SPECTRUM
-    ================================================== -->
-
-    <section class="visualizer-zone">
-
-        <div class="spectrum-box">
-
-            <canvas
-                id="spectrum"
-            ></canvas>
-
-
-            <!-- LEFT SKIP -->
-
+            <!-- PREVIOUS / REWIND -->
             <button
-                class="skip-button skip-left"
-                id="skipBack"
-                aria-label="Previous / rewind"
-            >
+                class="skip"
+                id="prevButton"
+                aria-label="Previous">
 
-                <div class="skip-symbol">
+                <svg viewBox="0 0 64 64">
 
-                    <div class="triangle"></div>
-                    <div class="triangle"></div>
+                    <rect
+                        x="9"
+                        y="17"
+                        width="7"
+                        height="30"
+                        rx="2"/>
 
-                    <div class="skip-lines"></div>
+                    <path
+                        d="
+                        M53 15
+                        L26 32
+                        L53 49
+                        Z
+                        "/>
 
-                </div>
+                </svg>
 
             </button>
 
 
-            <!-- CENTER PLAY -->
-
+            <!-- SPECTRUM + PLAY PAUSE -->
             <button
-                class="center-play"
+                class="spectrum-button"
                 id="playButton"
-                aria-label="Play"
-            >
-                <span
+                aria-label="Play">
+
+                <div
+                    class="spectrum"
+                    id="spectrum">
+                </div>
+
+                <div
                     class="play-icon"
-                    id="playIcon"
-                ></span>
-            </button>
-
-
-            <!-- RIGHT SKIP -->
-
-            <button
-                class="skip-button skip-right"
-                id="skipForward"
-                aria-label="Next / forward"
-            >
-
-                <div class="skip-symbol">
-
-                    <div class="triangle right"></div>
-                    <div class="triangle right"></div>
-
-                    <div class="skip-lines"></div>
-
+                    id="playIcon">
                 </div>
 
             </button>
 
-        </div>
 
-    </section>
+            <!-- NEXT / FORWARD -->
+            <button
+                class="skip"
+                id="nextButton"
+                aria-label="Next">
 
+                <svg viewBox="0 0 64 64">
 
-    <!-- TIME -->
+                    <path
+                        d="
+                        M11 15
+                        L38 32
+                        L11 49
+                        Z
+                        "/>
 
-    <div class="time-row">
+                    <rect
+                        x="48"
+                        y="17"
+                        width="7"
+                        height="30"
+                        rx="2"/>
 
-        <span id="currentTime">
-            0:00
-        </span>
+                </svg>
 
-        <span id="remainingTime">
-            −0:00
-        </span>
-
-    </div>
-
-
-    <!-- VOLUME -->
-
-    <section class="volume-section">
-
-        <div class="volume-icon">
-
-            <svg
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-            >
-                <path d="
-                    M3 9v6h4l5 4V5L7 9H3zm13.5
-                    3a4.5 4.5 0 0 0-2.25-3.9v7.8A4.5
-                    4.5 0 0 0 16.5 12zm0-8.25v2.05A7
-                    7 0 0 1 20 12a7 7 0 0 1-3.5
-                    6.2v2.05A9 9 0 0 0 22 12a9
-                    9 0 0 0-5.5-8.25z
-                "/>
-            </svg>
+            </button>
 
         </div>
 
 
-        <div class="volume-slider">
+        <!-- VOLUME -->
+        <div class="volume-area">
 
-            <div class="volume-track">
+
+            <div class="volume-icon">
+
+                <svg viewBox="0 0 24 24">
+
+                    <path
+                        d="
+                        M3 9v6h4l5 4V5L7 9H3z
+                        M16.5 8.5
+                        a5 5 0 0 1 0 7
+                        l1.4 1.4
+                        a7 7 0 0 0 0-9.8
+                        l-1.4 1.4z
+                        M19 6
+                        a9 9 0 0 1 0 12
+                        l1.4 1.4
+                        a11 11 0 0 0 0-14.8
+                        L19 6z
+                        "/>
+
+                </svg>
+
+            </div>
+
+
+            <div
+                class="volume-slider"
+                id="volumeSlider">
 
                 <div
                     class="volume-fill"
-                    id="volumeFill"
-                ></div>
+                    id="volumeFill">
+                </div>
 
             </div>
 
-            <input
-                id="volumeControl"
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value="0.8"
-            >
+
+            <div class="volume-icon">
+
+                <svg viewBox="0 0 24 24">
+
+                    <path
+                        d="
+                        M3 9v6h4l5 4V5L7 9H3z
+                        M16.5 8.5
+                        a5 5 0 0 1 0 7
+                        l1.4 1.4
+                        a7 7 0 0 0 0-9.8
+                        l-1.4 1.4z
+                        M19 6
+                        a9 9 0 0 1 0 12
+                        l1.4 1.4
+                        a11 11 0 0 0 0-14.8
+                        L19 6z
+                        "/>
+
+                </svg>
+
+            </div>
 
         </div>
 
 
-        <div class="volume-icon">
+        <!-- AIRPLAY -->
+        <div class="output">
 
-            <svg
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-            >
-                <path d="
-                    M3 9v6h4l5 4V5L7 9H3zm13.5
-                    3a4.5 4.5 0 0 0-2.25-3.9v7.8A4.5
-                    4.5 0 0 0 16.5 12zm0-8.25v2.05A7
-                    7 0 0 1 20 12a7 7 0 0 1-3.5
-                    6.2v2.05A9 9 0 0 0 22 12a9
-                    9 0 0 0-5.5-8.25z
-                "/>
-            </svg>
+            <button
+                class="output-button">
+
+                <svg viewBox="0 0 24 24">
+
+                    <path
+                        d="
+                        M12 3
+                        a7 7 0 0 1 7 7
+                        h2
+                        a9 9 0 0 0-18 0
+                        h2
+                        a7 7 0 0 1 7-7z
+
+                        M12 7
+                        a3 3 0 0 1 3 3
+                        h2
+                        a5 5 0 0 0-10 0
+                        h2
+                        a3 3 0 0 1 3-3z
+
+                        M12 14
+                        l-5 5h3v3h4v-3h3l-5-5z
+                        "/>
+
+                </svg>
+
+                <span>iPhone</span>
+
+            </button>
 
         </div>
 
-    </section>
+
+        <!-- HIDDEN AUDIO INPUT -->
+        <input
+            type="file"
+            id="audioInput"
+            accept="audio/*">
 
 
-    <!-- OUTPUT -->
-
-    <button
-        class="output-button"
-        id="outputButton"
-    >
-
-        <div class="output-icon"></div>
-
-        <span>
-            iPhone
-        </span>
-
-    </button>
+    </main>
 
 
-    <div class="bottom-space"></div>
-
-</main>
-
-
-<!-- ======================================================
-     FILE INPUTS
-====================================================== -->
-
-<input
-    class="hidden-file"
-    type="file"
-    id="imageInput"
-    accept="image/*"
->
-
-<input
-    class="hidden-file"
-    type="file"
-    id="audioInput"
-    accept="audio/*"
->
-
-
-<!-- ======================================================
-     MENU MODAL
-====================================================== -->
-
-<div
-    class="modal-backdrop"
-    id="menuModal"
->
-
-    <div class="modal">
-
-        <div class="modal-handle"></div>
-
-        <h2>
-            Music Player
-        </h2>
+    <!-- EDIT BUTTONS -->
+    <div class="edit-panel">
 
         <button
-            class="modal-button primary"
-            id="changeAudioButton"
-        >
-            🎵 &nbsp; Ganti Audio
+            class="edit-button"
+            id="changeAudio">
+            Ganti Audio
         </button>
 
         <button
-            class="modal-button"
-            id="changeCoverButton"
-        >
-            🖼️ &nbsp; Ganti Foto
-        </button>
-
-        <button
-            class="modal-button"
-            id="editInfoButton"
-        >
-            ✎ &nbsp; Edit Judul & Artist
-        </button>
-
-        <button
-            class="modal-button"
-            id="closeMenuButton"
-        >
-            Tutup
+            class="edit-button"
+            id="editArtist">
+            Edit Artist
         </button>
 
     </div>
 
 </div>
 
-
-<!-- ======================================================
-     EDIT INFO MODAL
-====================================================== -->
-
-<div
-    class="edit-box"
-    id="editBox"
->
-
-    <div class="edit-card">
-
-        <h2>
-            Edit Informasi Musik
-        </h2>
-
-        <label
-            class="input-label"
-            for="titleInput"
-        >
-            Judul Musik
-        </label>
-
-        <input
-            class="text-input"
-            id="titleInput"
-            type="text"
-            autocomplete="off"
-        >
-
-        <label
-            class="input-label"
-            for="artistInput"
-        >
-            Artist
-        </label>
-
-        <input
-            class="text-input"
-            id="artistInput"
-            type="text"
-            autocomplete="off"
-        >
-
-        <div class="edit-actions">
-
-            <button
-                id="cancelEdit"
-            >
-                Batal
-            </button>
-
-            <button
-                class="save"
-                id="saveEdit"
-            >
-                Simpan
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ======================================================
-     AUDIO
-====================================================== -->
 
 <audio
     id="audio"
-    preload="metadata"
-    crossorigin="anonymous"
-></audio>
+    preload="metadata">
+</audio>
 
 
 <script>
@@ -1570,14 +982,17 @@ const cover =
 const background =
     document.getElementById("background");
 
-const coverWrap =
-    document.getElementById("coverWrap");
-
 const imageInput =
     document.getElementById("imageInput");
 
 const audioInput =
     document.getElementById("audioInput");
+
+const title =
+    document.getElementById("title");
+
+const artist =
+    document.getElementById("artist");
 
 const playButton =
     document.getElementById("playButton");
@@ -1585,77 +1000,38 @@ const playButton =
 const playIcon =
     document.getElementById("playIcon");
 
-const skipBack =
-    document.getElementById("skipBack");
+const spectrum =
+    document.getElementById("spectrum");
 
-const skipForward =
-    document.getElementById("skipForward");
+const prevButton =
+    document.getElementById("prevButton");
+
+const nextButton =
+    document.getElementById("nextButton");
+
+const progress =
+    document.getElementById("progress");
+
+const progressFill =
+    document.getElementById("progressFill");
 
 const currentTime =
     document.getElementById("currentTime");
 
-const remainingTime =
-    document.getElementById("remainingTime");
+const duration =
+    document.getElementById("duration");
 
-const songTitle =
-    document.getElementById("songTitle");
-
-const artistName =
-    document.getElementById("artistName");
-
-const titleWindow =
-    document.getElementById("titleWindow");
-
-const volumeControl =
-    document.getElementById("volumeControl");
+const volumeSlider =
+    document.getElementById("volumeSlider");
 
 const volumeFill =
     document.getElementById("volumeFill");
 
-const menuButton =
-    document.getElementById("menuButton");
+const changeAudio =
+    document.getElementById("changeAudio");
 
-const menuModal =
-    document.getElementById("menuModal");
-
-const closeMenuButton =
-    document.getElementById("closeMenuButton");
-
-const changeAudioButton =
-    document.getElementById("changeAudioButton");
-
-const changeCoverButton =
-    document.getElementById("changeCoverButton");
-
-const editInfoButton =
-    document.getElementById("editInfoButton");
-
-const editArtistButton =
-    document.getElementById("editArtistButton");
-
-const editBox =
-    document.getElementById("editBox");
-
-const titleInput =
-    document.getElementById("titleInput");
-
-const artistInput =
-    document.getElementById("artistInput");
-
-const cancelEdit =
-    document.getElementById("cancelEdit");
-
-const saveEdit =
-    document.getElementById("saveEdit");
-
-const outputButton =
-    document.getElementById("outputButton");
-
-const canvas =
-    document.getElementById("spectrum");
-
-const ctx =
-    canvas.getContext("2d");
+const editArtist =
+    document.getElementById("editArtist");
 
 
 /* =========================================================
@@ -1663,249 +1039,289 @@ const ctx =
 ========================================================= */
 
 let audioContext = null;
-
 let analyser = null;
+let source = null;
 
-let sourceNode = null;
+let dataArray = null;
 
-let frequencyData = null;
+let bars = [];
 
-let audioConnected = false;
-
-let animationFrame = null;
+let audioLoaded = false;
 
 let currentObjectURL = null;
 
 let currentImageURL = null;
 
-let currentAudioFile = null;
+let artistName = "Artist";
 
-let manualArtist = false;
-
-
-/* =========================================================
-   DEFAULT SETTINGS
-========================================================= */
-
-audio.volume = 0.8;
-
-volumeControl.value = 0.8;
-
-updateVolumeUI();
+let animationFrame;
 
 
 /* =========================================================
-   HELPERS
+   DEFAULT COVER
 ========================================================= */
 
-function formatTime(seconds){
-
-    if(
-        !Number.isFinite(seconds) ||
-        seconds < 0
-    ){
-        return "0:00";
-    }
-
-    const minutes =
-        Math.floor(seconds / 60);
-
-    const secs =
-        Math.floor(seconds % 60)
-        .toString()
-        .padStart(2,"0");
-
-    return `${minutes}:${secs}`;
-}
-
-
-function updateRemaining(){
-
-    const duration =
-        audio.duration;
-
-    const current =
-        audio.currentTime;
-
-    if(!Number.isFinite(duration)){
-        remainingTime.textContent =
-            "−0:00";
-        return;
-    }
-
-    const remaining =
-        Math.max(
-            0,
-            duration - current
-        );
-
-    remainingTime.textContent =
-        `−${formatTime(remaining)}`;
-}
-
-
-function updateTime(){
-
-    currentTime.textContent =
-        formatTime(audio.currentTime);
-
-    updateRemaining();
-}
-
-
-function updateVolumeUI(){
-
-    const value =
-        Number(volumeControl.value);
-
-    volumeFill.style.width =
-        `${value * 100}%`;
-}
-
-
-/* =========================================================
-   TITLE SCROLL
-========================================================= */
-
-function updateTitleScroll(){
-
-    songTitle.classList.remove(
-        "scrolling"
-    );
-
-    songTitle.style
-        .removeProperty(
-            "--scroll-distance"
-        );
-
-    requestAnimationFrame(() => {
-
-        const containerWidth =
-            titleWindow.clientWidth;
-
-        const textWidth =
-            songTitle.scrollWidth;
-
-        if(textWidth > containerWidth){
-
-            const distance =
-                textWidth -
-                containerWidth +
-                55;
-
-            songTitle.style
-                .setProperty(
-                    "--scroll-distance",
-                    `${distance}px`
-                );
-
-            songTitle.classList.add(
-                "scrolling"
-            );
-        }
-
-    });
-}
+const defaultCover =
+    "cover.jpg";
 
 
 /* =========================================================
    PLAY ICON
 ========================================================= */
 
-function showPauseIcon(){
+function showPlayIcon(){
 
-    playIcon.outerHTML = `
-        <span
-            class="pause-icon"
-            id="playIcon"
-        >
-            <span></span>
-            <span></span>
-        </span>
+    playIcon.innerHTML = `
+
+        <svg viewBox="0 0 64 64">
+
+            <path
+                d="
+                M23 15
+                L50 32
+                L23 49
+                Z
+                ">
+            </path>
+
+        </svg>
+
     `;
-
 }
 
 
-function showPlayIcon(){
+function showPauseIcon(){
 
-    playIcon.outerHTML = `
-        <span
-            class="play-icon"
-            id="playIcon"
-        ></span>
+    playIcon.innerHTML = `
+
+        <svg viewBox="0 0 64 64">
+
+            <rect
+                x="19"
+                y="15"
+                width="10"
+                height="34"
+                rx="2">
+            </rect>
+
+            <rect
+                x="35"
+                y="15"
+                width="10"
+                height="34"
+                rx="2">
+            </rect>
+
+        </svg>
+
     `;
+}
 
+
+showPlayIcon();
+
+
+/* =========================================================
+   CREATE SPECTRUM
+========================================================= */
+
+function createSpectrum(){
+
+    spectrum.innerHTML = "";
+
+    bars = [];
+
+    const count = 42;
+
+    for(
+        let i = 0;
+        i < count;
+        i++
+    ){
+
+        const bar =
+            document.createElement("div");
+
+        bar.className = "bar";
+
+        bar.style.height =
+            `${5 + Math.random() * 15}px`;
+
+        spectrum.appendChild(bar);
+
+        bars.push(bar);
+    }
+}
+
+createSpectrum();
+
+
+/* =========================================================
+   AUDIO ANALYSER
+========================================================= */
+
+function setupAudio(){
+
+    if(audioContext)
+        return;
+
+    audioContext =
+        new (
+            window.AudioContext ||
+            window.webkitAudioContext
+        )();
+
+    analyser =
+        audioContext.createAnalyser();
+
+    analyser.fftSize = 512;
+
+    analyser.smoothingTimeConstant =
+        0.65;
+
+    dataArray =
+        new Uint8Array(
+            analyser.frequencyBinCount
+        );
+
+    source =
+        audioContext.createMediaElementSource(
+            audio
+        );
+
+    source.connect(analyser);
+
+    analyser.connect(
+        audioContext.destination
+    );
+
+    animateSpectrum();
 }
 
 
 /* =========================================================
-   AUDIO CONTEXT
+   SPECTRUM ANIMATION
 ========================================================= */
 
-function setupAudioAnalyser(){
+function animateSpectrum(){
 
-    if(audioConnected){
-        return true;
+    animationFrame =
+        requestAnimationFrame(
+            animateSpectrum
+        );
+
+    if(
+        !analyser ||
+        !bars.length
+    ){
+        return;
     }
 
-    try{
+    analyser.getByteFrequencyData(
+        dataArray
+    );
 
-        audioContext =
-            new (
-                window.AudioContext ||
-                window.webkitAudioContext
-            )();
+    const progressValue =
+        audio.duration
+        ? audio.currentTime /
+          audio.duration
+        : 0;
 
-        analyser =
-            audioContext.createAnalyser();
+    for(
+        let i = 0;
+        i < bars.length;
+        i++
+    ){
+
+        const position =
+            i / bars.length;
+
+        const index =
+            Math.floor(
+                position *
+                Math.min(
+                    dataArray.length,
+                    150
+                )
+            );
+
+        let value =
+            dataArray[index] || 0;
+
 
         /*
-            fftSize dibuat cukup besar supaya
-            spectrum punya banyak bar tetapi
-            tetap cepat merespons kick/bass.
+           Tambahan bass boost.
+           Bar awal mengambil frekuensi
+           rendah sehingga gerakannya
+           terasa lebih responsif.
         */
 
-        analyser.fftSize = 256;
+        if(i < bars.length * .3){
 
-        analyser.smoothingTimeConstant =
-            0.52;
+            value =
+                Math.min(
+                    255,
+                    value * 1.35
+                );
+        }
 
-        analyser.minDecibels =
-            -85;
 
-        analyser.maxDecibels =
-            -8;
+        let height =
+            5 +
+            (value / 255) * 48;
 
-        frequencyData =
-            new Uint8Array(
-                analyser.frequencyBinCount
+
+        /*
+           Variasi abstrak supaya
+           tidak semua bar naik rata.
+        */
+
+        const wave =
+            Math.sin(
+                Date.now() * .006 +
+                i * .8
+            ) * 4;
+
+
+        height += wave;
+
+
+        height =
+            Math.max(
+                5,
+                Math.min(
+                    55,
+                    height
+                )
             );
 
-        sourceNode =
-            audioContext.createMediaElementSource(
-                audio
+
+        bars[i].style.height =
+            `${height}px`;
+
+
+        /*
+           Warna orange mengikuti
+           posisi durasi lagu.
+        */
+
+        if(
+            position <= progressValue
+        ){
+
+            bars[i].classList.add(
+                "played"
             );
 
-        sourceNode.connect(analyser);
+        }else{
 
-        analyser.connect(
-            audioContext.destination
-        );
+            bars[i].classList.remove(
+                "played"
+            );
+        }
 
-        audioConnected = true;
-
-        return true;
-
-    }catch(error){
-
-        console.error(
-            "Audio analyser error:",
-            error
-        );
-
-        return false;
     }
+
 }
 
 
@@ -1913,142 +1329,325 @@ function setupAudioAnalyser(){
    PLAY / PAUSE
 ========================================================= */
 
-async function togglePlay(){
-
-    /*
-        AudioContext biasanya harus dibuat
-        setelah user menyentuh layar.
-    */
-
-    setupAudioAnalyser();
-
-    if(audioContext &&
-       audioContext.state === "suspended"){
-
-        try{
-            await audioContext.resume();
-        }catch(error){
-            console.log(error);
-        }
-    }
-
-    if(!audio.src){
-
-        audioInput.click();
-
-        return;
-    }
-
-    if(audio.paused){
-
-        try{
-
-            await audio.play();
-
-            showPauseIcon();
-
-        }catch(error){
-
-            console.error(
-                "Play error:",
-                error
-            );
-
-        }
-
-    }else{
-
-        audio.pause();
-
-        showPlayIcon();
-    }
-}
-
-
 playButton.addEventListener(
     "click",
-    togglePlay
+    async () => {
+
+        if(!audio.src){
+
+            audioInput.click();
+
+            return;
+        }
+
+
+        setupAudio();
+
+
+        if(
+            audioContext.state ===
+            "suspended"
+        ){
+
+            await audioContext.resume();
+        }
+
+
+        if(audio.paused){
+
+            try{
+
+                await audio.play();
+
+                showPauseIcon();
+
+            }catch(error){
+
+                console.log(error);
+
+            }
+
+        }else{
+
+            audio.pause();
+
+            showPlayIcon();
+
+        }
+
+    }
 );
 
 
 /* =========================================================
-   AUDIO LOAD
+   AUDIO FILE
 ========================================================= */
+
+changeAudio.addEventListener(
+    "click",
+    () => {
+
+        audioInput.click();
+
+    }
+);
+
 
 audioInput.addEventListener(
     "change",
-    function(){
+    event => {
 
         const file =
-            this.files &&
-            this.files[0];
+            event.target.files[0];
 
-        if(!file){
+        if(!file)
             return;
-        }
 
-        currentAudioFile =
-            file;
 
         if(currentObjectURL){
+
             URL.revokeObjectURL(
                 currentObjectURL
             );
+
         }
 
+
         currentObjectURL =
-            URL.createObjectURL(
-                file
-            );
+            URL.createObjectURL(file);
+
 
         audio.src =
             currentObjectURL;
 
+
         audio.load();
 
-        /*
-            Judul otomatis mengikuti nama file.
-        */
 
-        let filename =
-            file.name;
+        audioLoaded = true;
+
 
         /*
-            hapus extension
+           Nama file menjadi judul.
         */
 
-        filename =
-            filename.replace(
-                /\.[^/.]+$/,
-                ""
-            );
+        let fileName =
+            file.name
+                .replace(/\.[^/.]+$/, "");
+
+
+        title.textContent =
+            fileName;
+
+
+        checkMarquee(
+            title
+        );
+
+
+        currentTime.textContent =
+            "0:00";
+
+
+        duration.textContent =
+            "-0:00";
+
+
+        progressFill.style.width =
+            "0%";
+
 
         /*
-            Jika artist belum diedit,
-            kita pertahankan artist.
+           Jangan otomatis play.
         */
-
-        songTitle.textContent =
-            filename || "Unknown Song";
-
-        updateTitleScroll();
-
-        /*
-            Setiap audio baru kembali
-            ke posisi awal.
-        */
-
-        audio.currentTime = 0;
 
         showPlayIcon();
 
-        /*
-            Jika metadata sudah siap,
-            jangan langsung play.
-        */
+    }
+);
+
+
+/* =========================================================
+   IMAGE CHANGE
+========================================================= */
+
+cover.addEventListener(
+    "click",
+    () => {
+
+        imageInput.click();
 
     }
 );
+
+
+imageInput.addEventListener(
+    "change",
+    event => {
+
+        const file =
+            event.target.files[0];
+
+        if(!file)
+            return;
+
+
+        if(currentImageURL){
+
+            URL.revokeObjectURL(
+                currentImageURL
+            );
+
+        }
+
+
+        currentImageURL =
+            URL.createObjectURL(file);
+
+
+        cover.src =
+            currentImageURL;
+
+
+        updateBackground(
+            currentImageURL
+        );
+
+    }
+);
+
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+function updateBackground(
+    image
+){
+
+    background.style.backgroundImage =
+        `url("${image}")`;
+
+}
+
+
+/* =========================================================
+   EDIT ARTIST
+========================================================= */
+
+editArtist.addEventListener(
+    "click",
+    () => {
+
+        const value =
+            prompt(
+                "Masukkan nama artist:",
+                artistName
+            );
+
+
+        if(
+            value !== null &&
+            value.trim() !== ""
+        ){
+
+            artistName =
+                value.trim();
+
+            artist.textContent =
+                artistName;
+
+            checkMarquee(
+                artist
+            );
+
+        }
+
+    }
+);
+
+
+artist.addEventListener(
+    "click",
+    () => {
+
+        editArtist.click();
+
+    }
+);
+
+
+/* =========================================================
+   MARQUEE
+========================================================= */
+
+function checkMarquee(
+    element
+){
+
+    element.classList.remove(
+        "marquee"
+    );
+
+
+    /*
+       Tunggu browser menghitung
+       lebar teks.
+    */
+
+    requestAnimationFrame(
+        () => {
+
+            if(
+                element.scrollWidth >
+                element.clientWidth
+            ){
+
+                element.classList.add(
+                    "marquee"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TIME FORMAT
+========================================================= */
+
+function formatTime(
+    seconds
+){
+
+    if(
+        !Number.isFinite(seconds)
+    ){
+
+        return "0:00";
+
+    }
+
+
+    const minutes =
+        Math.floor(
+            seconds / 60
+        );
+
+    const secs =
+        Math.floor(
+            seconds % 60
+        )
+        .toString()
+        .padStart(2,"0");
+
+
+    return `${minutes}:${secs}`;
+
+}
 
 
 /* =========================================================
@@ -2057,25 +1656,150 @@ audioInput.addEventListener(
 
 audio.addEventListener(
     "loadedmetadata",
-    function(){
+    () => {
 
-        updateTime();
-
-        drawSpectrum();
+        duration.textContent =
+            "-" +
+            formatTime(
+                audio.duration
+            );
 
     }
 );
 
 
 /* =========================================================
-   TIME UPDATE
+   AUDIO TIME
 ========================================================= */
 
 audio.addEventListener(
     "timeupdate",
-    function(){
+    () => {
 
-        updateTime();
+        if(
+            !audio.duration
+        )
+            return;
+
+
+        const percent =
+            (
+                audio.currentTime /
+                audio.duration
+            ) * 100;
+
+
+        progressFill.style.width =
+            `${percent}%`;
+
+
+        currentTime.textContent =
+            formatTime(
+                audio.currentTime
+            );
+
+
+        duration.textContent =
+            "-" +
+            formatTime(
+                audio.duration -
+                audio.currentTime
+            );
+
+    }
+);
+
+
+/* =========================================================
+   PROGRESS CLICK
+========================================================= */
+
+progress.addEventListener(
+    "click",
+    event => {
+
+        if(
+            !audio.duration
+        )
+            return;
+
+
+        const rect =
+            progress.getBoundingClientRect();
+
+
+        const x =
+            event.clientX -
+            rect.left;
+
+
+        const percent =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    x / rect.width
+                )
+            );
+
+
+        audio.currentTime =
+            percent *
+            audio.duration;
+
+    }
+);
+
+
+/* =========================================================
+   PREVIOUS
+========================================================= */
+
+prevButton.addEventListener(
+    "click",
+    () => {
+
+        if(
+            audio.currentTime > 3
+        ){
+
+            audio.currentTime =
+                0;
+
+            return;
+
+        }
+
+
+        audio.currentTime =
+            Math.max(
+                0,
+                audio.currentTime - 10
+            );
+
+    }
+);
+
+
+/* =========================================================
+   NEXT
+========================================================= */
+
+nextButton.addEventListener(
+    "click",
+    () => {
+
+        if(
+            !audio.duration
+        )
+            return;
+
+
+        audio.currentTime =
+            Math.min(
+                audio.duration,
+                audio.currentTime + 10
+            );
 
     }
 );
@@ -2087,77 +1811,12 @@ audio.addEventListener(
 
 audio.addEventListener(
     "ended",
-    function(){
+    () => {
 
         showPlayIcon();
 
-        /*
-            Kembali ke awal supaya
-            spectrum/orange progress
-            kembali dari awal.
-        */
-
-        audio.currentTime = 0;
-
-        updateTime();
-
-    }
-);
-
-
-/* =========================================================
-   SKIP BACK
-========================================================= */
-
-skipBack.addEventListener(
-    "click",
-    function(){
-
-        /*
-            Kalau lagu sudah lewat 3 detik,
-            tombol kiri kembali 5 detik.
-
-            Kalau masih di awal,
-            kembali ke awal.
-        */
-
-        if(audio.currentTime > 3){
-
-            audio.currentTime =
-                Math.max(
-                    0,
-                    audio.currentTime - 5
-                );
-
-        }else{
-
-            audio.currentTime = 0;
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   SKIP FORWARD
-========================================================= */
-
-skipForward.addEventListener(
-    "click",
-    function(){
-
-        if(
-            Number.isFinite(audio.duration)
-        ){
-
-            audio.currentTime =
-                Math.min(
-                    audio.duration,
-                    audio.currentTime + 5
-                );
-
-        }
+        progressFill.style.width =
+            "100%";
 
     }
 );
@@ -2167,1299 +1826,150 @@ skipForward.addEventListener(
    VOLUME
 ========================================================= */
 
-volumeControl.addEventListener(
-    "input",
-    function(){
+let volume =
+    0.7;
 
-        const value =
-            Number(this.value);
+
+audio.volume =
+    volume;
+
+
+volumeFill.style.width =
+    `${volume * 100}%`;
+
+
+volumeSlider.addEventListener(
+    "click",
+    event => {
+
+        const rect =
+            volumeSlider.getBoundingClientRect();
+
+
+        let value =
+            (
+                event.clientX -
+                rect.left
+            ) /
+            rect.width;
+
+
+        value =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    value
+                )
+            );
+
+
+        volume =
+            value;
+
 
         audio.volume =
             value;
 
-        updateVolumeUI();
+
+        volumeFill.style.width =
+            `${value * 100}%`;
 
     }
 );
 
 
 /* =========================================================
-   CHANGE COVER
+   TOUCH VOLUME
 ========================================================= */
 
-coverWrap.addEventListener(
-    "click",
-    function(){
-
-        imageInput.click();
-
-    }
-);
+let draggingVolume =
+    false;
 
 
-changeCoverButton.addEventListener(
-    "click",
-    function(){
+volumeSlider.addEventListener(
+    "pointerdown",
+    () => {
 
-        closeMenu();
-
-        setTimeout(
-            () => imageInput.click(),
-            150
-        );
+        draggingVolume =
+            true;
 
     }
 );
-
-
-imageInput.addEventListener(
-    "change",
-    function(){
-
-        const file =
-            this.files &&
-            this.files[0];
-
-        if(!file){
-            return;
-        }
-
-        if(currentImageURL){
-
-            URL.revokeObjectURL(
-                currentImageURL
-            );
-
-        }
-
-        currentImageURL =
-            URL.createObjectURL(
-                file
-            );
-
-        cover.src =
-            currentImageURL;
-
-        /*
-            Background otomatis
-            mengikuti cover utama.
-        */
-
-        background.style
-            .setProperty(
-                "--bg-image",
-                `url("${currentImageURL}")`
-            );
-
-    }
-);
-
-
-/* =========================================================
-   EDIT ARTIST
-========================================================= */
-
-function openEdit(){
-
-    titleInput.value =
-        songTitle.textContent;
-
-    artistInput.value =
-        artistName.textContent;
-
-    editBox.classList.add(
-        "show"
-    );
-
-    setTimeout(
-        () => titleInput.focus(),
-        100
-    );
-}
-
-
-editArtistButton.addEventListener(
-    "click",
-    openEdit
-);
-
-
-editInfoButton.addEventListener(
-    "click",
-    function(){
-
-        closeMenu();
-
-        setTimeout(
-            openEdit,
-            150
-        );
-
-    }
-);
-
-
-cancelEdit.addEventListener(
-    "click",
-    function(){
-
-        editBox.classList.remove(
-            "show"
-        );
-
-    }
-);
-
-
-saveEdit.addEventListener(
-    "click",
-    function(){
-
-        const newTitle =
-            titleInput.value.trim();
-
-        const newArtist =
-            artistInput.value.trim();
-
-        if(newTitle){
-
-            songTitle.textContent =
-                newTitle;
-
-        }
-
-        if(newArtist){
-
-            artistName.textContent =
-                newArtist;
-
-            manualArtist = true;
-
-        }
-
-        updateTitleScroll();
-
-        editBox.classList.remove(
-            "show"
-        );
-
-    }
-);
-
-
-/* =========================================================
-   MENU
-========================================================= */
-
-function openMenu(){
-
-    menuModal.classList.add(
-        "show"
-    );
-
-}
-
-
-function closeMenu(){
-
-    menuModal.classList.remove(
-        "show"
-    );
-
-}
-
-
-menuButton.addEventListener(
-    "click",
-    openMenu
-);
-
-
-closeMenuButton.addEventListener(
-    "click",
-    closeMenu
-);
-
-
-menuModal.addEventListener(
-    "click",
-    function(event){
-
-        if(
-            event.target ===
-            menuModal
-        ){
-
-            closeMenu();
-
-        }
-
-    }
-);
-
-
-changeAudioButton.addEventListener(
-    "click",
-    function(){
-
-        closeMenu();
-
-        setTimeout(
-            () => audioInput.click(),
-            150
-        );
-
-    }
-);
-
-
-/* =========================================================
-   EDIT BOX OUTSIDE CLICK
-========================================================= */
-
-editBox.addEventListener(
-    "click",
-    function(event){
-
-        if(
-            event.target ===
-            editBox
-        ){
-
-            editBox.classList.remove(
-                "show"
-            );
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   ENTER / ESCAPE
-========================================================= */
-
-document.addEventListener(
-    "keydown",
-    function(event){
-
-        if(event.key === "Escape"){
-
-            closeMenu();
-
-            editBox.classList.remove(
-                "show"
-            );
-
-        }
-
-        if(
-            event.key === " " &&
-            event.target.tagName !== "INPUT"
-        ){
-
-            event.preventDefault();
-
-            togglePlay();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   OUTPUT BUTTON
-========================================================= */
-
-outputButton.addEventListener(
-    "click",
-    async function(){
-
-        /*
-            Media Session / browser output
-            tidak bisa dipaksa ke perangkat
-            tertentu melalui JavaScript biasa.
-
-            Jadi tombol ini hanya memberi
-            feedback visual.
-        */
-
-        outputButton.style.background =
-            "rgba(255,255,255,.24)";
-
-        setTimeout(
-            () => {
-
-                outputButton.style.background =
-                    "rgba(255,255,255,.15)";
-
-            },
-            220
-        );
-
-    }
-);
-
-
-/* =========================================================
-   CANVAS RESIZE
-========================================================= */
-
-function resizeCanvas(){
-
-    const rect =
-        canvas.getBoundingClientRect();
-
-    const dpr =
-        Math.min(
-            window.devicePixelRatio || 1,
-            2
-        );
-
-    canvas.width =
-        Math.floor(
-            rect.width * dpr
-        );
-
-    canvas.height =
-        Math.floor(
-            rect.height * dpr
-        );
-
-    ctx.setTransform(
-        dpr,
-        0,
-        0,
-        dpr,
-        0,
-        0
-    );
-
-}
 
 
 window.addEventListener(
-    "resize",
-    function(){
+    "pointerup",
+    () => {
 
-        resizeCanvas();
-
-        updateTitleScroll();
+        draggingVolume =
+            false;
 
     }
 );
 
 
-/* =========================================================
-   SPECTRUM DRAWING
-========================================================= */
+window.addEventListener(
+    "pointermove",
+    event => {
 
-function drawSpectrum(){
-
-    animationFrame =
-        requestAnimationFrame(
-            drawSpectrum
-        );
-
-    const width =
-        canvas.clientWidth;
-
-    const height =
-        canvas.clientHeight;
-
-    if(width <= 0 || height <= 0){
-        return;
-    }
-
-    /*
-        Bersihkan canvas.
-    */
-
-    ctx.clearRect(
-        0,
-        0,
-        width,
-        height
-    );
+        if(!draggingVolume)
+            return;
 
 
-    /*
-        Kalau analyser belum tersedia,
-        buat idle spectrum.
-    */
+        const rect =
+            volumeSlider.getBoundingClientRect();
 
-    if(
-        !analyser ||
-        !frequencyData
-    ){
-
-        drawIdleSpectrum(
-            width,
-            height
-        );
-
-        return;
-    }
-
-
-    analyser.getByteFrequencyData(
-        frequencyData
-    );
-
-
-    /*
-        Jumlah balok.
-
-        64 cukup padat seperti referensi
-        tetapi tetap halus di HP.
-    */
-
-    const barCount = 64;
-
-    const gap = 2.2;
-
-    const barWidth =
-        Math.max(
-            1.8,
-            (
-                width -
-                gap * (barCount - 1)
-            ) / barCount
-        );
-
-
-    /*
-        posisi progress lagu
-    */
-
-    let progress = 0;
-
-    if(
-        Number.isFinite(audio.duration) &&
-        audio.duration > 0
-    ){
-
-        progress =
-            audio.currentTime /
-            audio.duration;
-
-    }
-
-
-    /*
-        center spectrum.
-        Semua balok memiliki titik tengah
-        yang sama tetapi tinggi berbeda.
-    */
-
-    const centerY =
-        height / 2;
-
-
-    for(
-        let i = 0;
-        i < barCount;
-        i++
-    ){
-
-        /*
-            Mapping dari 64 bar ke
-            frequency analyser.
-
-            Low frequencies dibuat lebih
-            dominan supaya kick/bass
-            terasa kasar dan cepat.
-        */
-
-        const normalized =
-            i / (barCount - 1);
-
-        let dataIndex;
-
-        /*
-            lebih banyak perhatian ke
-            low-mid daripada treble.
-        */
-
-        dataIndex =
-            Math.floor(
-                Math.pow(
-                    normalized,
-                    1.55
-                ) *
-                (frequencyData.length - 1)
-            );
-
-
-        /*
-            Ambil beberapa bin sekaligus
-            supaya gerakan tidak patah-patah.
-        */
-
-        let energy = 0;
-
-        let samples = 0;
-
-        const range =
-            normalized < .35
-                ? 4
-                : 2;
-
-        for(
-            let j = -range;
-            j <= range;
-            j++
-        ){
-
-            const index =
-                Math.max(
-                    0,
-                    Math.min(
-                        frequencyData.length - 1,
-                        dataIndex + j
-                    )
-                );
-
-            energy +=
-                frequencyData[index];
-
-            samples++;
-
-        }
-
-        energy /=
-            samples;
-
-
-        /*
-            Boost bass.
-
-            Bagian kiri spectrum
-            akan lebih terasa menendang.
-        */
-
-        const bassBoost =
-            normalized < .35
-                ? 1.28
-                : normalized < .65
-                    ? 1.08
-                    : .88;
-
-        energy *=
-            bassBoost;
-
-
-        /*
-            Normalize.
-        */
 
         let value =
-            energy / 255;
-
-
-        /*
-            Tambahan minimum supaya
-            semua bar tetap bergerak.
-        */
-
-        value =
-            Math.max(
-                .035,
-                value
-            );
-
-
-        /*
-            non-linear response supaya
-            kick lebih kasar.
-        */
-
-        value =
-            Math.pow(
-                value,
-                .72
-            );
-
-
-        /*
-            Tinggi maksimum.
-        */
-
-        const maxHeight =
-            height * .82;
-
-
-        let barHeight =
-            value * maxHeight;
-
-
-        /*
-            Sedikit variasi berdasarkan
-            posisi agar tidak semuanya rata.
-        */
-
-        const variation =
-            0.82 +
             (
-                Math.sin(
-                    i * 1.7
-                ) + 1
-            ) * .09;
+                event.clientX -
+                rect.left
+            ) /
+            rect.width;
 
 
-        barHeight *=
-            variation;
-
-
-        /*
-            Batas minimum / maksimum.
-        */
-
-        barHeight =
+        value =
             Math.max(
-                5,
+                0,
                 Math.min(
-                    maxHeight,
-                    barHeight
+                    1,
+                    value
                 )
             );
 
 
-        /*
-            Posisi.
-        */
+        audio.volume =
+            value;
 
-        const x =
-            i *
-            (
-                barWidth +
-                gap
-            );
 
-        const y =
-            centerY -
-            barHeight / 2;
-
-
-        /*
-            Progress lagu.
-
-            Jika posisi bar sudah dilewati,
-            warnanya ORANGE.
-
-            Bagian depan tetap cyan/white
-            seperti referensi AVEE.
-        */
-
-        const barProgress =
-            i /
-            (barCount - 1);
-
-
-        let color;
-
-
-        if(
-            barProgress <= progress
-        ){
-
-            color =
-                "rgba(255,111,32,.98)";
-
-        }else{
-
-            /*
-                gradasi visual antara cyan
-                dan putih.
-            */
-
-            const whiteAmount =
-                Math.max(
-                    0,
-                    (
-                        normalized -
-                        .55
-                    ) * 1.8
-                );
-
-            const r =
-                Math.floor(
-                    25 +
-                    whiteAmount * 225
-                );
-
-            const g =
-                Math.floor(
-                    190 +
-                    whiteAmount * 65
-                );
-
-            const b =
-                Math.floor(
-                    225 +
-                    whiteAmount * 30
-                );
-
-            color =
-                `rgba(${r},${g},${Math.min(255,b)},.96)`;
-
-        }
-
-
-        /*
-            Glow.
-        */
-
-        ctx.save();
-
-        ctx.shadowBlur =
-            barProgress <= progress
-                ? 10
-                : 7;
-
-        ctx.shadowColor =
-            barProgress <= progress
-                ? "rgba(255,95,20,.7)"
-                : "rgba(0,215,255,.55)";
-
-
-        /*
-            Rounded bar.
-        */
-
-        roundRect(
-            ctx,
-            x,
-            y,
-            barWidth,
-            barHeight,
-            Math.min(
-                barWidth / 2,
-                3
-            )
-        );
-
-        ctx.fillStyle =
-            color;
-
-        ctx.fill();
-
-        ctx.restore();
-
-    }
-
-}
-
-
-/* =========================================================
-   IDLE SPECTRUM
-========================================================= */
-
-function drawIdleSpectrum(
-    width,
-    height
-){
-
-    const barCount = 64;
-
-    const gap = 2.2;
-
-    const barWidth =
-        Math.max(
-            1.8,
-            (
-                width -
-                gap * (barCount - 1)
-            ) / barCount
-        );
-
-    const centerY =
-        height / 2;
-
-    for(
-        let i = 0;
-        i < barCount;
-        i++
-    ){
-
-        const x =
-            i *
-            (
-                barWidth +
-                gap
-            );
-
-        const wave =
-            Math.abs(
-                Math.sin(
-                    i * .43
-                )
-            );
-
-        const heightValue =
-            6 +
-            wave * 22;
-
-        const y =
-            centerY -
-            heightValue / 2;
-
-        ctx.save();
-
-        ctx.shadowBlur = 6;
-
-        ctx.shadowColor =
-            "rgba(0,210,255,.35)";
-
-        roundRect(
-            ctx,
-            x,
-            y,
-            barWidth,
-            heightValue,
-            3
-        );
-
-        ctx.fillStyle =
-            "rgba(70,210,240,.7)";
-
-        ctx.fill();
-
-        ctx.restore();
-
-    }
-
-}
-
-
-/* =========================================================
-   ROUNDED RECT
-========================================================= */
-
-function roundRect(
-    context,
-    x,
-    y,
-    width,
-    height,
-    radius
-){
-
-    const r =
-        Math.min(
-            radius,
-            width / 2,
-            height / 2
-        );
-
-    context.beginPath();
-
-    context.moveTo(
-        x + r,
-        y
-    );
-
-    context.arcTo(
-        x + width,
-        y,
-        x + width,
-        y + height,
-        r
-    );
-
-    context.arcTo(
-        x + width,
-        y + height,
-        x,
-        y + height,
-        r
-    );
-
-    context.arcTo(
-        x,
-        y + height,
-        x,
-        y,
-        r
-    );
-
-    context.arcTo(
-        x,
-        y,
-        x + width,
-        y,
-        r
-    );
-
-    context.closePath();
-
-}
-
-
-/* =========================================================
-   INITIALIZATION
-========================================================= */
-
-resizeCanvas();
-
-updateTitleScroll();
-
-drawSpectrum();
-
-
-/* =========================================================
-   DEFAULT IMAGE
-========================================================= */
-
-function setInitialBackground(){
-
-    background.style
-        .setProperty(
-            "--bg-image",
-            `url("${cover.src}")`
-        );
-
-}
-
-setInitialBackground();
-
-
-/* =========================================================
-   IMAGE LOADED -> UPDATE BG
-========================================================= */
-
-cover.addEventListener(
-    "load",
-    function(){
-
-        background.style
-            .setProperty(
-                "--bg-image",
-                `url("${cover.src}")`
-            );
+        volumeFill.style.width =
+            `${value * 100}%`;
 
     }
 );
 
 
 /* =========================================================
-   DOUBLE CLICK COVER
+   INITIAL BACKGROUND
 ========================================================= */
 
-coverWrap.addEventListener(
-    "dblclick",
-    function(){
-
-        imageInput.click();
-
-    }
+updateBackground(
+    defaultCover
 );
 
 
 /* =========================================================
-   TOUCH HOLD SAFETY
+   WINDOW RESIZE
 ========================================================= */
 
-document.addEventListener(
-    "touchmove",
-    function(event){
+window.addEventListener(
+    "resize",
+    () => {
 
-        /*
-            Jangan izinkan halaman
-            melakukan scroll.
+        checkMarquee(title);
 
-            Ini penting supaya UI
-            tetap terasa seperti
-            layar music player.
-        */
-
-        if(
-            event.target.closest(
-                ".modal"
-            ) ||
-            event.target.closest(
-                ".edit-card"
-            )
-        ){
-            return;
-        }
-
-    },
-    {
-        passive:true
-    }
-);
-
-
-/* =========================================================
-   MEDIA SESSION
-========================================================= */
-
-if(
-    "mediaSession" in navigator
-){
-
-    navigator.mediaSession.setActionHandler(
-        "play",
-        () => {
-
-            if(audio.paused){
-                togglePlay();
-            }
-
-        }
-    );
-
-    navigator.mediaSession.setActionHandler(
-        "pause",
-        () => {
-
-            if(!audio.paused){
-                togglePlay();
-            }
-
-        }
-    );
-
-    navigator.mediaSession.setActionHandler(
-        "seekbackward",
-        () => {
-
-            audio.currentTime =
-                Math.max(
-                    0,
-                    audio.currentTime - 10
-                );
-
-        }
-    );
-
-    navigator.mediaSession.setActionHandler(
-        "seekforward",
-        () => {
-
-            if(
-                Number.isFinite(
-                    audio.duration
-                )
-            ){
-
-                audio.currentTime =
-                    Math.min(
-                        audio.duration,
-                        audio.currentTime + 10
-                    );
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   UPDATE MEDIA SESSION METADATA
-========================================================= */
-
-function updateMediaSession(){
-
-    if(
-        !("mediaSession" in navigator) ||
-        !("MediaMetadata" in window)
-    ){
-        return;
-    }
-
-    navigator.mediaSession.metadata =
-        new MediaMetadata({
-
-            title:
-                songTitle.textContent,
-
-            artist:
-                artistName.textContent,
-
-            album:
-                "Music Player",
-
-            artwork:[
-                {
-                    src:
-                        cover.src,
-                    sizes:
-                        "512x512",
-                    type:
-                        "image/jpeg"
-                }
-            ]
-
-        });
-
-}
-
-
-audio.addEventListener(
-    "play",
-    updateMediaSession
-);
-
-saveEdit.addEventListener(
-    "click",
-    updateMediaSession
-);
-
-imageInput.addEventListener(
-    "change",
-    updateMediaSession
-);
-
-
-/* =========================================================
-   PREVENT CONTEXT MENU ON COVER
-========================================================= */
-
-coverWrap.addEventListener(
-    "contextmenu",
-    function(event){
-
-        event.preventDefault();
-
-    }
-);
-
-
-/* =========================================================
-   PAGE VISIBILITY
-========================================================= */
-
-document.addEventListener(
-    "visibilitychange",
-    function(){
-
-        /*
-            Jangan pause otomatis.
-
-            Audio tetap boleh berjalan
-            ketika tab tidak terlihat,
-            tergantung browser.
-        */
-
-        if(
-            !document.hidden &&
-            !audio.paused
-        ){
-
-            drawSpectrum();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   SAVE INFO LOCALLY
-========================================================= */
-
-function savePlayerData(){
-
-    try{
-
-        localStorage.setItem(
-            "musicPlayerArtist",
-            artistName.textContent
-        );
-
-        localStorage.setItem(
-            "musicPlayerTitle",
-            songTitle.textContent
-        );
-
-    }catch(error){
-
-        console.log(
-            "Local storage unavailable"
-        );
-
-    }
-
-}
-
-
-function loadPlayerData(){
-
-    try{
-
-        const savedArtist =
-            localStorage.getItem(
-                "musicPlayerArtist"
-            );
-
-        const savedTitle =
-            localStorage.getItem(
-                "musicPlayerTitle"
-            );
-
-        if(savedArtist){
-
-            artistName.textContent =
-                savedArtist;
-
-        }
-
-        if(savedTitle){
-
-            songTitle.textContent =
-                savedTitle;
-
-        }
-
-    }catch(error){
-
-        console.log(
-            "Local storage unavailable"
-        );
-
-    }
-
-}
-
-
-saveEdit.addEventListener(
-    "click",
-    savePlayerData
-);
-
-
-loadPlayerData();
-
-updateTitleScroll();
-
-
-/* =========================================================
-   DOUBLE CHECK PLAY ICON
-========================================================= */
-
-audio.addEventListener(
-    "pause",
-    function(){
-
-        showPlayIcon();
-
-    }
-);
-
-
-audio.addEventListener(
-    "play",
-    function(){
-
-        showPauseIcon();
-
-        updateMediaSession();
+        checkMarquee(artist);
 
     }
 );
