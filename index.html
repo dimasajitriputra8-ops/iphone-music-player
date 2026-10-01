@@ -4161,7 +4161,7 @@ artwork.addEventListener(
 
 /* =========================================================
    LANDSCAPE / HORIZONTAL
-   HANYA MENGUBAH SUSUNAN PLAYER SAAT MENDATAR
+   HANYA UNTUK LAYAR MENDATAR
    ========================================================= */
 
 @media (max-width: 900px) and (orientation: landscape) {
@@ -4184,98 +4184,67 @@ artwork.addEventListener(
 
     border-radius: 30px;
 
-    display: grid;
-
-    grid-template-columns: 230px minmax(0, 1fr);
-
-    grid-template-rows:
-      auto
-      auto
-      auto
-      auto
-      auto;
-
-    column-gap: 28px;
+    /* horizontal */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
   }
 
-  /* BAGIAN ATAS */
-  .top-row {
-    grid-column: 1 / -1;
-    grid-row: 1;
+  /* -----------------------------------------
+     BARIS ATAS
+     ----------------------------------------- */
 
+  .top-row {
     width: 100%;
-    margin-bottom: 4px;
+
+    flex: 0 0 100%;
+
+    margin-bottom: 14px;
   }
 
-  /* ALBUM */
-  .artwork-section {
-    grid-column: 1;
-    grid-row: 2 / 6;
+  /* -----------------------------------------
+     ALBUM ART
+     ----------------------------------------- */
 
+  .artwork-section {
     width: 230px;
+
+    flex: 0 0 230px;
+
+    margin-top: 0;
+
+    display: flex;
+    justify-content: center;
   }
 
   .artwork {
     width: 230px;
     height: 230px;
 
-    margin: 0;
-
     border-radius: 24px;
   }
 
-  /* JUDUL + ARTIST */
-  .track-info {
-    grid-column: 2;
-    grid-row: 2;
+  /* -----------------------------------------
+     BAGIAN KANAN
+     ----------------------------------------- */
 
-    margin-top: 0;
-    min-width: 0;
-  }
-
-  /* PROGRESS */
-  .progress-section {
-    grid-column: 2;
-    grid-row: 3;
-
-    width: 100%;
-    margin-top: 14px;
-  }
-
-  /* CONTROL PLAY / NEXT / PREV */
-  .controls {
-    grid-column: 2;
-    grid-row: 4;
-
-    width: 100%;
-
-    margin-top: 14px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 38px;
-  }
-
-  /* VOLUME */
-  .volume-section {
-    grid-column: 2;
-    grid-row: 5;
-
-    width: 100%;
-    margin-top: 14px;
-  }
-
-  /* OUTPUT */
+  .track-info,
+  .progress-section,
+  .controls,
+  .volume-section,
   .output-button {
-    grid-column: 2;
-    grid-row: 5;
+    width: calc(100% - 258px);
 
-    margin-top: 14px;
+    margin-left: 28px;
+  }
 
-    pointer-events: auto;
+  /* JUDUL + ARTIST */
+
+  .track-info {
+    margin-top: 0;
+
+    flex: 0 0 calc(100% - 258px);
   }
 
   .track-title {
@@ -4286,17 +4255,83 @@ artwork.addEventListener(
     font-size: 15px;
   }
 
+  /* -----------------------------------------
+     PROGRESS
+     ----------------------------------------- */
+
+  .progress-section {
+    margin-top: 18px;
+
+    flex: 0 0 calc(100% - 258px);
+  }
+
+  /* -----------------------------------------
+     CONTROL
+     ----------------------------------------- */
+
+  .controls {
+    margin-top: 18px;
+
+    flex: 0 0 calc(100% - 258px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 38px;
+  }
+
   .control {
     width: 40px;
     height: 40px;
-
-    pointer-events: auto;
   }
 
   .control.play {
     width: 62px;
     height: 62px;
   }
+
+  /* -----------------------------------------
+     VOLUME
+     ----------------------------------------- */
+
+  .volume-section {
+    margin-top: 16px;
+
+    flex: 0 0 calc(100% - 258px);
+  }
+
+  /* -----------------------------------------
+     OUTPUT
+     ----------------------------------------- */
+
+  .output-button {
+    margin-top: 16px;
+
+    flex: 0 0 calc(100% - 258px);
+
+    pointer-events: auto;
+  }
+
+  /* -----------------------------------------
+     PASTIKAN ELEMEN INTERAKTIF
+     TETAP MENERIMA KLIK
+     ----------------------------------------- */
+
+  .artwork,
+  .top-button,
+  .artist-button,
+  .progress-track,
+  .control,
+  .output-button,
+  .dynamic-island,
+  .island-action {
+    pointer-events: auto;
+  }
+
+  /* -----------------------------------------
+     DYNAMIC ISLAND
+     ----------------------------------------- */
 
   .dynamic-island {
     width: 164px;
