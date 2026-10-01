@@ -2230,31 +2230,42 @@ function setTrackTitle(title) {
 
 function setArtwork(src) {
 
-  currentArtwork = src;
+  if (!src) {
+    return;
+  }
 
-  /* ================================
-     ALBUM UTAMA
-     ================================ */
+  currentArtwork = src;
+  lastArtworkUrl = src;
+
+
+  /* ========================================
+     1. GANTI ALBUM UTAMA
+     ======================================== */
 
   albumArt.src = src;
 
 
-  /* ================================
-     BACKGROUND IKUT ALBUM UTAMA
-     ================================ */
+  /* ========================================
+     2. GANTI BACKGROUND
+     ======================================== */
 
   backgroundArt.style.opacity = "0";
 
-  setTimeout(() => {
+
+  const newBackground = new Image();
+
+  newBackground.onload = () => {
 
     backgroundArt.src = src;
 
-    backgroundArt.onload = () => {
+    backgroundArt.style.transform =
+      "scale(1.18)";
 
-      backgroundArt.style.transform =
-        "scale(1.18)";
+    backgroundArt.style.opacity =
+      "0.94";
 
-      backgroundArt.style.opacity = "0.94";
+
+    requestAnimationFrame(() => {
 
       setTimeout(() => {
 
@@ -2263,26 +2274,39 @@ function setArtwork(src) {
 
       }, 50);
 
-    };
+    });
 
-  }, 120);
+  };
 
 
-  /* ================================
-     DYNAMIC ISLAND
-     ================================ */
+  newBackground.onerror = () => {
+
+    /* Kalau gambar gagal dibaca,
+       tetap gunakan src langsung. */
+
+    backgroundArt.src = src;
+
+    backgroundArt.style.opacity =
+      "0.94";
+
+  };
+
+
+  newBackground.src = src;
+
+
+  /* ========================================
+     3. DYNAMIC ISLAND
+     ======================================== */
 
   islandThumb.src = src;
 
   islandExpandedArt.src = src;
 
 
-  lastArtworkUrl = src;
-
-
-  /* ================================
-     ANIMASI ALBUM UTAMA
-     ================================ */
+  /* ========================================
+     4. ANIMASI ALBUM UTAMA
+     ======================================== */
 
   artwork.animate(
     [
@@ -2295,7 +2319,8 @@ function setArtwork(src) {
     ],
     {
       duration: 420,
-      easing: "cubic-bezier(.16,1,.3,1)"
+      easing:
+        "cubic-bezier(.16,1,.3,1)"
     }
   );
 
