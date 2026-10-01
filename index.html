@@ -191,26 +191,96 @@ body {
     44px
     30px;
 
-  border:
-    1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.16);
 
   border-radius: var(--player-radius);
 
+  /*
+    iPhone-style translucent glass.
+    Background artwork tetap terlihat melalui kartu.
+  */
   background:
     linear-gradient(
       180deg,
-      rgba(33,42,49,0.44),
-      rgba(5,20,29,0.48)
+      rgba(255,255,255,0.16) 0%,
+      rgba(255,255,255,0.09) 38%,
+      rgba(0,0,0,0.14) 100%
     );
 
+  /*
+    Ini yang membuat kartu mengikuti
+    warna/gambar background di belakang.
+  */
+  backdrop-filter:
+    blur(34px)
+    saturate(1.45)
+    brightness(1.04);
+
+  -webkit-backdrop-filter:
+    blur(34px)
+    saturate(1.45)
+    brightness(1.04);
+
   box-shadow:
-    0 40px 100px rgba(0,0,0,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.08);
+    0 28px 80px rgba(0,0,0,0.28),
+    0 8px 30px rgba(0,0,0,0.14),
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.08);
 
-  backdrop-filter: blur(24px) saturate(1.2);
-  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  overflow: hidden;
 
-  overflow: visible;
+  isolation: isolate;
+}
+
+
+/* Lapisan kaca tambahan */
+.player::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  border-radius: inherit;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,0.14) 0%,
+      rgba(255,255,255,0.04) 28%,
+      rgba(255,255,255,0.00) 55%,
+      rgba(0,0,0,0.10) 100%
+    );
+
+  opacity: 0.9;
+
+  z-index: -1;
+}
+
+
+/* Highlight kaca tipis di bagian atas */
+.player::after {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,0.28),
+      transparent
+    );
+
+  opacity: 0.8;
+
+  pointer-events: none;
 }
 
 .player::before {
