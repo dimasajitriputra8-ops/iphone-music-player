@@ -4159,9 +4159,9 @@ artwork.addEventListener(
 );
 
 
-  /* =========================================================
+/* =========================================================
    LANDSCAPE / HORIZONTAL
-   HANYA MENGUBAH SUSUNAN SAAT LAYAR MENDATAR
+   HANYA MENGUBAH SUSUNAN PLAYER SAAT MENDATAR
    ========================================================= */
 
 @media (max-width: 900px) and (orientation: landscape) {
@@ -4185,12 +4185,21 @@ artwork.addEventListener(
     border-radius: 30px;
 
     display: grid;
-    grid-template-columns: 230px 1fr;
-    grid-template-rows: auto auto 1fr auto;
+
+    grid-template-columns: 230px minmax(0, 1fr);
+
+    grid-template-rows:
+      auto
+      auto
+      auto
+      auto
+      auto;
+
     column-gap: 28px;
     align-items: center;
   }
 
+  /* BAGIAN ATAS */
   .top-row {
     grid-column: 1 / -1;
     grid-row: 1;
@@ -4199,17 +4208,24 @@ artwork.addEventListener(
     margin-bottom: 4px;
   }
 
-  .artwork {
+  /* ALBUM */
+  .artwork-section {
     grid-column: 1;
-    grid-row: 2 / 5;
+    grid-row: 2 / 6;
 
+    width: 230px;
+  }
+
+  .artwork {
     width: 230px;
     height: 230px;
 
     margin: 0;
+
     border-radius: 24px;
   }
 
+  /* JUDUL + ARTIST */
   .track-info {
     grid-column: 2;
     grid-row: 2;
@@ -4218,6 +4234,7 @@ artwork.addEventListener(
     min-width: 0;
   }
 
+  /* PROGRESS */
   .progress-section {
     grid-column: 2;
     grid-row: 3;
@@ -4226,6 +4243,7 @@ artwork.addEventListener(
     margin-top: 14px;
   }
 
+  /* CONTROL PLAY / NEXT / PREV */
   .controls {
     grid-column: 2;
     grid-row: 4;
@@ -4234,22 +4252,30 @@ artwork.addEventListener(
 
     margin-top: 14px;
 
+    display: flex;
+    align-items: center;
     justify-content: center;
+
     gap: 38px;
   }
 
+  /* VOLUME */
   .volume-section {
     grid-column: 2;
-    grid-row: 4;
+    grid-row: 5;
 
+    width: 100%;
     margin-top: 14px;
   }
 
+  /* OUTPUT */
   .output-button {
     grid-column: 2;
-    grid-row: 4;
+    grid-row: 5;
 
     margin-top: 14px;
+
+    pointer-events: auto;
   }
 
   .track-title {
@@ -4263,6 +4289,8 @@ artwork.addEventListener(
   .control {
     width: 40px;
     height: 40px;
+
+    pointer-events: auto;
   }
 
   .control.play {
@@ -4282,11 +4310,6 @@ artwork.addEventListener(
     border-radius: 24px;
   }
 }
-
-
-/* =========================================================
-   END
-   ========================================================= */
 </script>
 
 </body>
