@@ -86,14 +86,21 @@
     }
 
     .progress {
-      margin-top: 20px;
-    }
+  margin-top: 20px;
+  width: 100%;
+  background: #444;
+  height: 4px;
+  border-radius: 10px;
+  overflow: hidden;
+}
 
     .bar {
-      height: 4px;
-      background: #444;
-      border-radius: 10px;
-    }
+  width: 0%;
+  height: 4px;
+  background: #ff8a00;
+  border-radius: 10px;
+  transition: width 0.08s linear;
+}
 
     .times {
       display: flex;
