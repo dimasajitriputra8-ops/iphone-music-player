@@ -191,14 +191,9 @@ body {
     30px;
 
   border: 1px solid rgba(255, 255, 255, 0.16);
-
   border-radius: var(--player-radius);
 
-  /*
-    FROSTED GLASS
-    Transparan supaya artwork/background
-    tetap terlihat jelas melalui kartu.
-  */
+  /* iPhone Music-style translucent glass */
   background:
     linear-gradient(
       180deg,
@@ -207,9 +202,7 @@ body {
       rgba(0, 0, 0, 0.10) 100%
     );
 
-  /*
-    Efek kaca seperti iPhone.
-  */
+  /* Background artwork tetap terlihat melalui kartu */
   backdrop-filter:
     blur(34px)
     saturate(1.45)
@@ -227,14 +220,10 @@ body {
     inset 0 -1px 0 rgba(0, 0, 0, 0.08);
 
   overflow: hidden;
-
   isolation: isolate;
 }
 
-
-/*
-  LAPISAN KACA / REFLECTION
-*/
+/* Lapisan kaca halus */
 .player::before {
   content: "";
 
@@ -250,7 +239,7 @@ body {
       135deg,
       rgba(255, 255, 255, 0.14) 0%,
       rgba(255, 255, 255, 0.04) 28%,
-      rgba(255, 255, 255, 0.00) 55%,
+      rgba(255, 255, 255, 0) 55%,
       rgba(0, 0, 0, 0.10) 100%
     );
 
@@ -259,15 +248,11 @@ body {
   z-index: -1;
 }
 
-
-/*
-  HIGHLIGHT TIPIS DI BAGIAN ATAS
-*/
+/* Highlight tipis bagian atas */
 .player::after {
   content: "";
 
   position: absolute;
-
   top: 0;
   left: 8%;
   right: 8%;
