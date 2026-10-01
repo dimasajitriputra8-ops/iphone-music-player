@@ -2232,19 +2232,57 @@ function setArtwork(src) {
 
   currentArtwork = src;
 
+  /* ================================
+     ALBUM UTAMA
+     ================================ */
+
   albumArt.src = src;
 
-  backgroundArt.src = src;
+
+  /* ================================
+     BACKGROUND IKUT ALBUM UTAMA
+     ================================ */
+
+  backgroundArt.style.opacity = "0";
+
+  setTimeout(() => {
+
+    backgroundArt.src = src;
+
+    backgroundArt.onload = () => {
+
+      backgroundArt.style.transform =
+        "scale(1.18)";
+
+      backgroundArt.style.opacity = "0.94";
+
+      setTimeout(() => {
+
+        backgroundArt.style.transform =
+          "scale(1.12)";
+
+      }, 50);
+
+    };
+
+  }, 120);
+
+
+  /* ================================
+     DYNAMIC ISLAND
+     ================================ */
 
   islandThumb.src = src;
 
   islandExpandedArt.src = src;
 
+
   lastArtworkUrl = src;
 
-  /*
-    Small pulse when artwork changes.
-  */
+
+  /* ================================
+     ANIMASI ALBUM UTAMA
+     ================================ */
 
   artwork.animate(
     [
@@ -2261,19 +2299,6 @@ function setArtwork(src) {
     }
   );
 
-  /*
-    Background zoom effect.
-  */
-
-  backgroundArt.style.transform =
-    "scale(1.18)";
-
-  setTimeout(() => {
-
-    backgroundArt.style.transform =
-      "scale(1.12)";
-
-  }, 40);
 }
 
 
