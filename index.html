@@ -762,26 +762,85 @@ body {
 }
 
 /* =========================================================
-   SPECTRUM
+   MINI SPECTRUM - APPLE STYLE
    ========================================================= */
 
-.spectrum-wrap {
+.progress-header {
   position: relative;
 
-  height: 25px;
+  width: 100%;
+  height: 17px;
 
-  margin-top: 19px;
+  display: flex;
 
-  overflow: hidden;
+  justify-content: flex-end;
+  align-items: flex-end;
 
-  opacity: 0.95;
+  margin-bottom: 4px;
 }
 
-#spectrum {
-  width: 100%;
-  height: 25px;
+.spectrum-mini {
+  width: 32px;
+  height: 16px;
 
+  display: flex;
+
+  align-items: flex-end;
+  justify-content: flex-end;
+
+  gap: 2px;
+
+  opacity: 0.78;
+
+  overflow: hidden;
+}
+
+.spectrum-mini span {
   display: block;
+
+  width: 2px;
+
+  min-height: 3px;
+
+  max-height: 14px;
+
+  border-radius: 999px;
+
+  background: rgba(255,255,255,0.88);
+
+  transform-origin: bottom center;
+
+  transition:
+    height 70ms linear,
+    opacity 120ms ease;
+}
+
+.spectrum-mini span:nth-child(1) {
+  height: 5px;
+}
+
+.spectrum-mini span:nth-child(2) {
+  height: 9px;
+}
+
+.spectrum-mini span:nth-child(3) {
+  height: 13px;
+}
+
+.spectrum-mini span:nth-child(4) {
+  height: 7px;
+}
+
+.spectrum-mini span:nth-child(5) {
+  height: 11px;
+}
+
+.spectrum-mini span:nth-child(6) {
+  height: 6px;
+}
+
+.spectrum-mini span:nth-child(7) {
+  height: 9px;
 }
 
 /* =========================================================
@@ -1557,13 +1616,58 @@ body {
 
     <!-- SPECTRUM -->
 
-    <div class="spectrum-wrap">
+   <div class="progress-section">
 
-      <canvas
-        id="spectrum"
-      ></canvas>
+  <div class="progress-header">
 
+    <div class="spectrum-mini" id="spectrumMini">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
+
+  </div>
+
+  <div
+    id="progressTrack"
+    class="progress-track"
+    role="slider"
+    aria-label="Progress lagu"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    aria-valuenow="0"
+    tabindex="0"
+  >
+
+    <div
+      id="progressFill"
+      class="progress-fill"
+    ></div>
+
+    <div
+      id="progressThumb"
+      class="progress-thumb"
+    ></div>
+
+  </div>
+
+  <div class="time-row">
+
+    <span id="currentTime">
+      0:00
+    </span>
+
+    <span id="remainingTime">
+      −0:00
+    </span>
+
+  </div>
+
+</div>
 
 
     <!-- PROGRESS -->
@@ -1919,9 +2023,11 @@ const islandPlay =
 const islandSpectrum =
   document.getElementById("islandSpectrum");
 
-const spectrumCanvas =
-  document.getElementById("spectrum");
+const spectrumMini =
+  document.getElementById("spectrumMini");
 
+const spectrumMiniBars =
+  spectrumMini.querySelectorAll("span");
 const outputButton =
   document.getElementById("outputButton");
 
@@ -2072,11 +2178,6 @@ audio.volume = 0.78;
 updateVolumeUI();
 
 resizeSpectrum();
-
-window.addEventListener(
-  "resize",
-  resizeSpectrum
-);
 
 
 /* =========================================================
@@ -3253,213 +3354,129 @@ audio.addEventListener(
 
 
 /* =========================================================
-   SPECTRUM CANVAS
-   ========================================================= */
-
-function resizeSpectrum() {
-
-  const rect =
-    spectrumCanvas.getBoundingClientRect();
-
-  const dpr =
-    Math.min(
-      window.devicePixelRatio || 1,
-      2
-    );
-
-  spectrumCanvas.width =
-    Math.max(
-      1,
-      Math.floor(rect.width * dpr)
-    );
-
-  spectrumCanvas.height =
-    Math.max(
-      1,
-      Math.floor(rect.height * dpr)
-    );
-}
-
-
-/* =========================================================
-   DRAW SPECTRUM
+   MINI SPECTRUM
    ========================================================= */
 
 function drawSpectrum() {
 
-  const ctx =
-    spectrumCanvas.getContext("2d");
-
-  if (!ctx) {
-    return;
-  }
-
-  const width =
-    spectrumCanvas.width;
-
-  const height =
-    spectrumCanvas.height;
-
-  ctx.clearRect(
-    0,
-    0,
-    width,
-    height
-  );
-
-  /*
-    If analyser exists and audio is playing,
-    use real frequency data.
-  */
-
-  let values;
+  let values = null;
 
   if (
     analyser &&
     !audio.paused
   ) {
 
-    const data =
+    values =
       new Uint8Array(
         analyser.frequencyBinCount
       );
 
     analyser.getByteFrequencyData(
-      data
+      values
     );
-
-    values = data;
-
-  } else {
-
-    /*
-      When paused, keep a very subtle
-      breathing animation.
-    */
-
-    values = null;
   }
-
-  const bars = 34;
-
-  const gap =
-    width / bars;
-
-  const barWidth =
-    Math.max(
-      2,
-      gap * 0.43
-    );
 
   const now =
     performance.now();
 
-  for (
-    let i = 0;
-    i < bars;
-    i++
-  ) {
+  spectrumMiniBars.forEach(
+    (bar, index) => {
 
-    let value;
+      let level;
 
-    if (values) {
+      if (
+        values &&
+        values.length
+      ) {
 
-      const sourceIndex =
-        Math.floor(
-          (i / bars) *
-          values.length
-        );
+        /*
+          Ambil beberapa bagian frekuensi
+          agar gerakannya terasa seperti
+          indikator musik kecil.
+        */
+
+        const sourceIndex =
+          Math.floor(
+            (index / spectrumMiniBars.length) *
+            Math.min(
+              values.length,
+              30
+            )
+          );
+
+        level =
+          values[
+            Math.min(
+              sourceIndex,
+              values.length - 1
+            )
+          ] / 255;
+
+        /*
+          Sedikit boost supaya tetap
+          terlihat meskipun volume musik
+          tidak terlalu keras.
+        */
+
+        level =
+          Math.pow(
+            level,
+            0.68
+          );
+
+      } else {
+
+        /*
+          Idle animation ketika pause.
+        */
+
+        level =
+          0.18 +
+          (
+            Math.sin(
+              now * 0.004 +
+              index * 0.9
+            ) + 1
+          ) *
+          0.08;
+      }
 
       /*
-        Boost lower frequencies slightly
-        so the visual feels more alive.
+        Range tinggi 3px - 14px.
       */
 
-      value =
-        values[
+      const height =
+        Math.max(
+          3,
           Math.min(
-            sourceIndex,
-            values.length - 1
+            14,
+            3 + level * 11
           )
-        ] / 255;
-
-      value =
-        Math.pow(
-          value,
-          0.72
         );
 
-    } else {
+      bar.style.height =
+        `${height}px`;
 
-      value =
-        0.13 +
-        Math.sin(
-          now * 0.0022 +
-          i * 0.58
-        ) *
-        0.035;
+      /*
+        Saat pause dibuat sedikit
+        lebih redup.
+      */
+
+      bar.style.opacity =
+        audio.paused
+          ? "0.45"
+          : "0.9";
     }
-
-    const centerBias =
-      0.72 +
-      Math.sin(
-        (i / bars) * Math.PI
-      ) *
-      0.28;
-
-    let barHeight =
-      value *
-      height *
-      0.82 *
-      centerBias;
-
-    /*
-      Keep bars small, matching the
-      compact spectrum from the screenshot.
-    */
-
-    barHeight =
-      Math.max(
-        2,
-        barHeight
-      );
-
-    const x =
-      i * gap +
-      (gap - barWidth) / 2;
-
-    const y =
-      height -
-      barHeight;
-
-    const radius =
-      Math.min(
-        4,
-        barWidth / 2
-      );
-
-    ctx.beginPath();
-
-    ctx.roundRect(
-      x,
-      y,
-      barWidth,
-      barHeight,
-      radius
-    );
-
-    ctx.fillStyle =
-      `rgba(255,255,255,${0.28 + value * 0.58})`;
-
-    ctx.fill();
-  }
+  );
 
   /*
-    Dynamic Island mini spectrum.
+    Dynamic Island tetap menggunakan
+    spectrum-nya sendiri.
   */
 
   updateIslandSpectrum(values);
 }
+
 
 
 /* =========================================================
@@ -3984,8 +4001,6 @@ document.addEventListener(
       document.visibilityState ===
       "visible"
     ) {
-
-      resizeSpectrum();
 
     }
   }
