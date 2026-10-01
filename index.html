@@ -79,12 +79,6 @@
       background: #050505;
     }
 
-    .spectrum {
-      font-size: 38px;
-      letter-spacing: 2px;
-      color: #ff8a00;
-    }
-
    .progress {
   margin-top: 20px;
   width: 100%;
@@ -166,9 +160,10 @@
       <div class="artist">Your Artist</div>
     </div>
 
-    <div class="visualizer">
-      <div class="spectrum">▂▅▇▃▆▂▇▅▃</div>
-    </div>
+   <div class="visualizer">
+  <canvas id="spectrum"></canvas>
+  <button class="visualizer-play" id="visualizerPlay">▶</button>
+</div>
 
     <div class="progress">
       <div class="bar" id="progressBar"></div>
