@@ -720,9 +720,23 @@ body {
 }
 
 @keyframes derbaysTitleMarquee {
-  0%, 12% { transform: translateX(0); }
-  72%, 86% { transform: translateX(calc(-1 * var(--marquee-distance, 0px))); }
-  100% { transform: translateX(0); }
+  /* Diam sebentar di awal, lalu berjalan ke kiri. */
+  0%, 8% { transform: translateX(0); opacity: 1; }
+  /* Berjalan perlahan agar judul panjang tetap mudah dibaca. */
+  62% { transform: translateX(calc(-1 * var(--marquee-distance, 0px))); opacity: 1; }
+  /* Jeda di ujung sebelum kembali ke awal. */
+  70%, 74% { transform: translateX(calc(-1 * var(--marquee-distance, 0px))); opacity: 1; }
+  /* Kedip lembut beberapa kali, seperti transisi halus pada pemutar musik. */
+  77% { opacity: .35; }
+  80% { opacity: 1; }
+  83% { opacity: .35; }
+  86% { opacity: 1; }
+  89% { opacity: .35; }
+  92% { opacity: 1; }
+  /* Sembunyikan sesaat saat posisi kembali ke awal agar reset tidak terasa menyentak. */
+  95% { transform: translateX(calc(-1 * var(--marquee-distance, 0px))); opacity: 0; }
+  96% { transform: translateX(0); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
