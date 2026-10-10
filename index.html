@@ -2887,6 +2887,17 @@ function updateProgressUI() {
       )
     );
 
+  // Use one shared whole-second clock so both labels update in sync.
+  const totalSeconds = Math.floor(duration);
+  const currentSeconds = Math.min(
+    totalSeconds,
+    Math.floor(current)
+  );
+  const remainingSeconds = Math.max(
+    0,
+    totalSeconds - currentSeconds
+  );
+
   progressFill.style.width =
     `${percentage}%`;
 
@@ -2894,10 +2905,10 @@ function updateProgressUI() {
     `${percentage}%`;
 
   currentTimeElement.textContent =
-    formatTime(current);
+    formatTime(currentSeconds);
 
   remainingTimeElement.textContent =
-    `−${formatTime(duration - current)}`;
+    `−${formatTime(remainingSeconds)}`;
 
   progressTrack.setAttribute(
     "aria-valuenow",
