@@ -697,18 +697,36 @@ body {
 
 .track-title {
   min-width: 0;
+  flex: 1 1 auto;
 
   font-size: clamp(22px, 4vw, 32px);
-
   line-height: 1.08;
-
   font-weight: 750;
-
   letter-spacing: -0.035em;
 
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  position: relative;
+}
+
+.track-title-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.track-title.marquee-active .track-title-marquee {
+  animation: derbaysTitleMarquee var(--marquee-duration, 8s) linear infinite;
+}
+
+@keyframes derbaysTitleMarquee {
+  0%, 12% { transform: translateX(0); }
+  72%, 86% { transform: translateX(calc(-1 * var(--marquee-distance, 0px))); }
+  100% { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track-title.marquee-active .track-title-marquee { animation: none; }
 }
 
 .explicit {
@@ -2184,21 +2202,47 @@ function titleFromFileName(name) {
    UPDATE TRACK TITLE
    ========================================================= */
 
-function setTrackTitle(title) {
+function updateTrackTitleMarquee() {
+  if (!trackTitle) return;
 
-  trackTitle.textContent =
-    title || DEFAULT_TITLE;
+  const label = trackTitle.querySelector(".track-title-marquee");
+  if (!label) return;
 
-  islandMiniTitle.textContent =
-    title || DEFAULT_TITLE;
+  trackTitle.classList.remove("marquee-active");
+  trackTitle.style.removeProperty("--marquee-distance");
+  trackTitle.style.removeProperty("--marquee-duration");
 
-  islandExpandedTitle.textContent =
-    title || DEFAULT_TITLE;
-
-  document.title =
-    `${title || DEFAULT_TITLE} — DERBAYS`;
+  // Ukur setelah layout diperbarui; judul pendek tidak perlu berjalan.
+  requestAnimationFrame(() => {
+    if (!trackTitle.isConnected || !label.isConnected) return;
+    const distance = Math.ceil(label.scrollWidth - trackTitle.clientWidth);
+    if (distance > 8) {
+      trackTitle.style.setProperty("--marquee-distance", `${distance}px`);
+      // Kecepatan tetap nyaman dibaca, dengan jeda di awal dan di ujung.
+      const duration = Math.max(7, Math.min(18, 5 + distance / 18));
+      trackTitle.style.setProperty("--marquee-duration", `${duration}s`);
+      trackTitle.classList.add("marquee-active");
+    }
+  });
 }
 
+function setTrackTitle(title) {
+  const safeTitle = title || DEFAULT_TITLE;
+
+  trackTitle.textContent = "";
+  const marqueeLabel = document.createElement("span");
+  marqueeLabel.className = "track-title-marquee";
+  marqueeLabel.textContent = safeTitle;
+  trackTitle.appendChild(marqueeLabel);
+
+  islandMiniTitle.textContent = safeTitle;
+  islandExpandedTitle.textContent = safeTitle;
+  document.title = `${safeTitle} — DERBAYS`;
+  updateTrackTitleMarquee();
+}
+
+
+window.addEventListener("resize", updateTrackTitleMarquee);
 
 /* =========================================================
    UPDATE ARTWORK
