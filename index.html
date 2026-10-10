@@ -707,12 +707,17 @@ body {
   white-space: nowrap;
   overflow: hidden;
   position: relative;
+  /* Feather halus di kedua tepi agar teks masuk/keluar tanpa terpotong kasar. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 5.5%, #000 94.5%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 5.5%, #000 94.5%, transparent 100%);
 }
 
 .track-title-marquee {
   display: inline-block;
   white-space: nowrap;
-  will-change: transform;
+  will-change: transform, opacity;
+  /* Glow tipis sebagai aksen, tetap lembut dan tidak berlebihan. */
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.16), 0 0 10px rgba(160, 195, 255, 0.08);
 }
 
 .track-title.marquee-active .track-title-marquee {
