@@ -3760,15 +3760,17 @@ if (
    OUTPUT BUTTON
    ========================================================= */
 
-outputButton.addEventListener(
-  "click",
-  () => {
-
-    showToast(
-      "Output aktif: DERBAYS"
-    );
-  }
-);
+// Tombol bulat DERBAYS di bawah dipakai khusus untuk mengganti/memilih lagu.
+// Klik langsung membuka pemilih file musik dari perangkat.
+if (outputButton && audioInput) {
+  outputButton.title = "Pilih atau ganti musik dari perangkat";
+  outputButton.setAttribute("aria-label", "Pilih atau ganti musik");
+  outputButton.addEventListener("click", () => {
+    // Kosongkan nilai agar file yang sama bisa dipilih lagi.
+    audioInput.value = "";
+    audioInput.click();
+  });
+}
 
 
 /* =========================================================
