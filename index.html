@@ -518,9 +518,7 @@ body {
 }
 
 .top-actions {
-  display: flex;
-  align-items: center;
-  gap: 7px;
+  display: none;
 }
 
 .top-button {
@@ -573,6 +571,8 @@ body {
 
 .artwork {
   position: relative;
+  cursor: pointer;
+  touch-action: manipulation;
 
   width: min(100%, 570px);
 
@@ -849,8 +849,9 @@ body {
 
 .progress-section {
   margin-top: 6px;
-  /* Sedikit lebih lebar, mendekati proporsi progress bar Apple Music di iPhone. */
-  margin-inline: -6px;
+  width: calc(100% + 24px);
+  margin-left: -12px;
+  margin-right: -12px;
 }
 
 .progress-track {
@@ -1523,59 +1524,7 @@ body {
       </div>
 
       <div class="top-actions">
-
-        <!-- LOAD SONG -->
-
-        <button
-          id="openAudio"
-          class="top-button"
-          type="button"
-          aria-label="Pilih lagu"
-          title="Pilih lagu"
-        >
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M9 18V5l11-2v13"/>
-            <circle cx="6" cy="18" r="3"/>
-            <circle cx="17" cy="16" r="3"/>
-          </svg>
-
-        </button>
-
-
-        <!-- LOAD IMAGE -->
-
-        <button
-          id="openImage"
-          class="top-button"
-          type="button"
-          aria-label="Ganti album art"
-          title="Ganti album art"
-        >
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <rect x="3" y="3" width="18" height="18" rx="3"/>
-            <circle cx="8.5" cy="8.5" r="1.5"/>
-            <path d="m21 15-5-5L5 21"/>
-          </svg>
-
-        </button>
-
-      </div>
+</div>
 
     </div>
 
@@ -1598,7 +1547,7 @@ body {
         />
 
         <div class="artwork-hint">
-          TAP UNTUK GANTI ALBUM ART
+          KETUK ALBUM UNTUK GANTI FOTO
         </div>
 
       </div>
@@ -2415,12 +2364,10 @@ artistButton.addEventListener(
    AUDIO INPUT
    ========================================================= */
 
-openAudio.addEventListener(
-  "click",
-  () => {
-    audioInput.click();
-  }
-);
+// Pemilihan lagu sekarang dilakukan dengan mengetuk judul lagu saat dijeda.
+if (openAudio) {
+  openAudio.addEventListener("click", () => audioInput.click());
+}
 
 audioInput.addEventListener(
   "change",
@@ -3232,12 +3179,10 @@ volumeTrack.addEventListener(
    IMAGE PICKER
    ========================================================= */
 
-openImage.addEventListener(
-  "click",
-  () => {
-    imageInput.click();
-  }
-);
+// Tombol ikon gambar dihilangkan; album utama tetap membuka pemilih foto.
+if (openImage) {
+  openImage.addEventListener("click", () => imageInput.click());
+}
 
 
 artwork.addEventListener(
@@ -4117,20 +4062,26 @@ updateMediaSession();
    CLICK TITLE TO SHOW CURRENT FILE
    ========================================================= */
 
-trackTitle.addEventListener(
-  "click",
-  () => {
+trackTitle.title = "Ketuk saat lagu dijeda untuk memilih lagu dari perangkat";
+trackTitle.style.cursor = "pointer";
+trackTitle.setAttribute("role", "button");
+trackTitle.setAttribute("tabindex", "0");
 
-    if (
-      playlist[currentIndex]
-    ) {
-
-      showToast(
-        playlist[currentIndex].name
-      );
-    }
+function openSongPickerWhenPaused() {
+  if (!audio.paused) {
+    showToast("Jeda lagu terlebih dahulu untuk mengganti musik");
+    return;
   }
-);
+  audioInput.click();
+}
+
+trackTitle.addEventListener("click", openSongPickerWhenPaused);
+trackTitle.addEventListener("keydown", event => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    openSongPickerWhenPaused();
+  }
+});
 
 
 /* =========================================================
