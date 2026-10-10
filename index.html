@@ -2477,31 +2477,11 @@ function loadRemoteSong() {
 
 
 /* =========================================================
-   LONG PRESS / SECONDARY ACTION ON MUSIC BUTTON
+   LEGACY MUSIC BUTTON HANDLER REMOVED
+   The top music icon was intentionally removed. Avoid binding
+   events to the now-absent #openAudio element; doing so throws
+   a TypeError and prevents every handler below from initializing.
    ========================================================= */
-
-let audioButtonDownTime = 0;
-
-openAudio.addEventListener(
-  "pointerdown",
-  () => {
-    audioButtonDownTime = Date.now();
-  }
-);
-
-openAudio.addEventListener(
-  "pointerup",
-  () => {
-
-    const duration =
-      Date.now() - audioButtonDownTime;
-
-    if (duration > 700) {
-      loadRemoteSong();
-    }
-  }
-);
-
 
 /* =========================================================
    LOAD TRACK
@@ -3188,9 +3168,19 @@ if (openImage) {
 artwork.addEventListener(
   "click",
   () => {
-    imageInput.click();
+    if (imageInput) imageInput.click();
   }
 );
+
+artwork.setAttribute("role", "button");
+artwork.setAttribute("tabindex", "0");
+artwork.setAttribute("aria-label", "Ketuk untuk mengganti foto album");
+artwork.addEventListener("keydown", event => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    if (imageInput) imageInput.click();
+  }
+});
 
 
 imageInput.addEventListener(
