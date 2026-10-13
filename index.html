@@ -799,90 +799,12 @@ body {
 }
 
 /* =========================================================
-   MINI SPECTRUM - APPLE STYLE
+   AUDIO WAVEFORM PROGRESS — transparent, waveform only
    ========================================================= */
 
 .progress-header {
-  position: relative;
-
-  width: 100%;
-  height: 17px;
-
-  display: flex;
-
-  justify-content: flex-end;
-  align-items: flex-end;
-
-  margin-bottom: 4px;
+  display: none;
 }
-
-.spectrum-mini {
-  width: 32px;
-  height: 16px;
-
-  display: flex;
-
-  align-items: flex-end;
-  justify-content: flex-end;
-
-  gap: 2px;
-
-  opacity: 0.78;
-
-  overflow: hidden;
-}
-
-.spectrum-mini span {
-  display: block;
-
-  width: 2px;
-
-  min-height: 3px;
-
-  max-height: 14px;
-
-  border-radius: 999px;
-
-  background: rgba(255,255,255,0.88);
-
-  transform-origin: bottom center;
-
-  transition:
-    height 70ms linear,
-    opacity 120ms ease;
-}
-
-.spectrum-mini span:nth-child(1) {
-  height: 5px;
-}
-
-.spectrum-mini span:nth-child(2) {
-  height: 9px;
-}
-
-.spectrum-mini span:nth-child(3) {
-  height: 13px;
-}
-
-.spectrum-mini span:nth-child(4) {
-  height: 7px;
-}
-
-.spectrum-mini span:nth-child(5) {
-  height: 11px;
-}
-
-.spectrum-mini span:nth-child(6) {
-  height: 6px;
-}
-
-.spectrum-mini span:nth-child(7) {
-  height: 9px;
-}
-
-/* =========================================================
-   PROGRESS
-   ========================================================= */
 
 .progress-section {
   margin-top: 6px;
@@ -893,66 +815,20 @@ body {
 
 .progress-track {
   position: relative;
-
   width: 100%;
-  height: 6px;
-
-  border-radius: 999px;
-
-  background: rgba(255,255,255,0.20);
-
+  height: 38px;
+  border-radius: 0;
+  background: transparent;
   cursor: pointer;
-
   touch-action: none;
+  overflow: hidden;
 }
 
-.progress-fill {
-  position: absolute;
-
-  top: 0;
-  left: 0;
-
-  width: 0%;
+.waveform-canvas {
+  display: block;
+  width: 100%;
   height: 100%;
-
-  border-radius: inherit;
-
-  background: rgba(255,255,255,0.86);
-
-  /* Pergerakan utama digerakkan requestAnimationFrame agar tidak tersendat. */
-  transition: none;
-  pointer-events: none;
-}
-
-.progress-thumb {
-  position: absolute;
-
-  top: 50%;
-
-  left: 0%;
-
-  width: 13px;
-  height: 13px;
-
-  border-radius: 50%;
-
-  background: #fff;
-
-  transform:
-    translate(-50%, -50%)
-    scale(0);
-
-  box-shadow:
-    0 1px 5px rgba(0,0,0,0.25);
-
-  transition: transform 180ms cubic-bezier(.2,.8,.2,1);
-
-  pointer-events: none;
-}
-
-.progress-track:hover .progress-thumb,
-.progress-track.dragging .progress-thumb {
-  transform: translate(-50%, -50%) scale(1);
+  background: transparent;
 }
 
 .time-row {
@@ -1664,41 +1540,17 @@ body {
 
 <div class="progress-section">
 
-  <div class="progress-header">
-
-    <div class="spectrum-mini" id="spectrumMini">
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-
-  </div>
-
   <div
     id="progressTrack"
     class="progress-track"
     role="slider"
-    aria-label="Progress lagu"
+    aria-label="Waveform dan progress lagu"
     aria-valuemin="0"
     aria-valuemax="100"
     aria-valuenow="0"
     tabindex="0"
   >
-
-    <div
-      id="progressFill"
-      class="progress-fill"
-    ></div>
-
-    <div
-      id="progressThumb"
-      class="progress-thumb"
-    ></div>
-
+    <canvas id="waveformCanvas" class="waveform-canvas" aria-hidden="true"></canvas>
   </div>
 
   <div class="time-row">
@@ -1965,11 +1817,11 @@ const nextButton =
 const progressTrack =
   document.getElementById("progressTrack");
 
-const progressFill =
-  document.getElementById("progressFill");
-
-const progressThumb =
-  document.getElementById("progressThumb");
+const waveformCanvas =
+  document.getElementById("waveformCanvas");
+const waveformContext = waveformCanvas.getContext("2d");
+let waveformPeaks = [];
+let waveformResizeObserver = null;
 
 const currentTimeElement =
   document.getElementById("currentTime");
@@ -2623,6 +2475,7 @@ function loadTrack(
 
   audio.load();
 
+  buildWaveformForTrack(track);
   updateProgressUI();
 
   if (autoplay) {
@@ -2894,71 +2747,96 @@ nextButton.addEventListener(
    PROGRESS UI
    ========================================================= */
 
+function resizeWaveformCanvas() {
+  const rect = progressTrack.getBoundingClientRect();
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+  waveformCanvas.width = Math.max(1, Math.round(rect.width * dpr));
+  waveformCanvas.height = Math.max(1, Math.round(rect.height * dpr));
+  waveformContext.setTransform(dpr, 0, 0, dpr, 0, 0);
+  drawWaveform();
+}
+
+function drawWaveform() {
+  if (!waveformCanvas || !waveformContext) return;
+  const rect = progressTrack.getBoundingClientRect();
+  const width = rect.width;
+  const height = rect.height;
+  if (!width || !height) return;
+  waveformContext.clearRect(0, 0, width, height);
+  const count = Math.max(1, Math.floor(width / 3));
+  const duration = audio.duration;
+  const progress = Number.isFinite(duration) && duration > 0
+    ? Math.max(0, Math.min(1, audio.currentTime / duration)) : 0;
+  const gap = 1.2;
+  const barWidth = Math.max(1, (width - gap * (count - 1)) / count);
+  for (let i = 0; i < count; i++) {
+    const peakIndex = waveformPeaks.length
+      ? Math.min(waveformPeaks.length - 1, Math.floor(i / count * waveformPeaks.length)) : -1;
+    // If waveform decoding is unavailable, use a quiet neutral placeholder until audio data is available.
+    const peak = peakIndex >= 0 ? waveformPeaks[peakIndex] : (0.16 + 0.12 * Math.abs(Math.sin(i * 1.71)));
+    const barHeight = Math.max(2, peak * (height - 3));
+    const x = i * (barWidth + gap);
+    const y = (height - barHeight) / 2;
+    waveformContext.fillStyle = (i / count) <= progress
+      ? 'rgba(255,255,255,0.96)' : 'rgba(255,255,255,0.43)';
+    waveformContext.beginPath();
+    const r = Math.min(barWidth / 2, 2);
+    waveformContext.roundRect(x, y, barWidth, barHeight, r);
+    waveformContext.fill();
+  }
+}
+
+async function buildWaveformForTrack(track) {
+  waveformPeaks = [];
+  drawWaveform();
+  if (!track || !track.file || !window.AudioContext && !window.webkitAudioContext) return;
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    const decoder = new AudioContextClass();
+    const buffer = await decoder.decodeAudioData(await track.file.arrayBuffer());
+    const channel = buffer.getChannelData(0);
+    const count = 1400;
+    const blockSize = Math.max(1, Math.floor(channel.length / count));
+    for (let i = 0; i < count; i++) {
+      const from = i * blockSize;
+      const to = Math.min(channel.length, from + blockSize);
+      let peak = 0;
+      for (let j = from; j < to; j++) peak = Math.max(peak, Math.abs(channel[j]));
+      waveformPeaks.push(Math.max(0.045, Math.min(1, peak * 1.55)));
+    }
+    drawWaveform();
+    await decoder.close();
+  } catch (error) {
+    console.warn('Waveform audio decode unavailable:', error);
+  }
+}
+
 function updateProgressUI() {
-
-  const duration =
-    audio.duration;
-
-  const current =
-    audio.currentTime;
-
-  if (
-    !Number.isFinite(duration) ||
-    duration <= 0
-  ) {
-
-    progressFill.style.width =
-      "0%";
-
-    progressThumb.style.left =
-      "0%";
-
-    currentTimeElement.textContent =
-      "0:00";
-
-    remainingTimeElement.textContent =
-      "−0:00";
-
+  const duration = audio.duration;
+  const current = audio.currentTime;
+  if (!Number.isFinite(duration) || duration <= 0) {
+    currentTimeElement.textContent = '0:00';
+    remainingTimeElement.textContent = '−0:00';
+    progressTrack.setAttribute('aria-valuenow', '0');
+    drawWaveform();
     return;
   }
-
-  const percentage =
-    Math.min(
-      100,
-      Math.max(
-        0,
-        (current / duration) * 100
-      )
-    );
-
-  // Use one shared whole-second clock so both labels update in sync.
+  const percentage = Math.min(100, Math.max(0, (current / duration) * 100));
   const totalSeconds = Math.floor(duration);
-  const currentSeconds = Math.min(
-    totalSeconds,
-    Math.floor(current)
-  );
-  const remainingSeconds = Math.max(
-    0,
-    totalSeconds - currentSeconds
-  );
-
-  progressFill.style.width =
-    `${percentage}%`;
-
-  progressThumb.style.left =
-    `${percentage}%`;
-
-  currentTimeElement.textContent =
-    formatTime(currentSeconds);
-
-  remainingTimeElement.textContent =
-    `−${formatTime(remainingSeconds)}`;
-
-  progressTrack.setAttribute(
-    "aria-valuenow",
-    percentage.toFixed(1)
-  );
+  const currentSeconds = Math.min(totalSeconds, Math.floor(current));
+  const remainingSeconds = Math.max(0, totalSeconds - currentSeconds);
+  currentTimeElement.textContent = formatTime(currentSeconds);
+  remainingTimeElement.textContent = `−${formatTime(remainingSeconds)}`;
+  progressTrack.setAttribute('aria-valuenow', percentage.toFixed(1));
+  drawWaveform();
 }
+
+window.addEventListener('resize', resizeWaveformCanvas);
+if ('ResizeObserver' in window) {
+  waveformResizeObserver = new ResizeObserver(resizeWaveformCanvas);
+  waveformResizeObserver.observe(progressTrack);
+}
+requestAnimationFrame(resizeWaveformCanvas);
 
 
 /* =========================================================
