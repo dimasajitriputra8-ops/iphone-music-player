@@ -1884,7 +1884,7 @@ const spectrumMini =
   document.getElementById("spectrumMini");
 
 const spectrumMiniBars =
-  spectrumMini.querySelectorAll("span");
+  spectrumMini ? spectrumMini.querySelectorAll("span") : [];
 const outputButton =
   document.getElementById("outputButton");
 
@@ -2762,30 +2762,70 @@ function drawWaveform() {
   const width = rect.width;
   const height = rect.height;
   if (!width || !height) return;
+
+  // Fixed-position, full-width abstract spectrum. Bars react independently
+  // across the entire width; nothing scrolls and no background is painted.
   waveformContext.clearRect(0, 0, width, height);
-  const count = Math.max(1, Math.floor(width / 3));
-  const duration = audio.duration;
-  const progress = Number.isFinite(duration) && duration > 0
-    ? Math.max(0, Math.min(1, audio.currentTime / duration)) : 0;
-  const gap = 1.2;
-  const barWidth = Math.max(1, (width - gap * (count - 1)) / count);
+  const now = performance.now();
+  const barSpacing = 4.0;
+  const barWidth = Math.max(1.35, Math.min(2.6, barSpacing * 0.64));
+  const count = Math.max(24, Math.floor(width / barSpacing));
+  const centerY = height / 2;
+  const maxBarHeight = height * 0.98;
+  let values = null;
+
+  if (analyser && !audio.paused) {
+    values = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(values);
+  }
+
   for (let i = 0; i < count; i++) {
-    const peakIndex = waveformPeaks.length
-      ? Math.min(waveformPeaks.length - 1, Math.floor(i / count * waveformPeaks.length)) : -1;
-    // If waveform decoding is unavailable, use a quiet neutral placeholder until audio data is available.
-    const peak = peakIndex >= 0 ? waveformPeaks[peakIndex] : (0.16 + 0.12 * Math.abs(Math.sin(i * 1.71)));
-    const barHeight = Math.max(2, peak * (height - 3));
-    const x = i * (barWidth + gap);
-    const y = (height - barHeight) / 2;
-    waveformContext.fillStyle = (i / count) <= progress
-      ? 'rgba(255,255,255,0.96)' : 'rgba(255,255,255,0.43)';
+    // Distribute frequency bands in a deliberately varied pattern instead of
+    // assigning bass only to the left and treble only to the right. A stable
+    // hash keeps each bar's frequency character while audio levels animate.
+    const seed = Math.abs(Math.sin((i + 1) * 127.1 + 311.7) * 43758.5453) % 1;
+    let level;
+    if (values && values.length) {
+      const spread = Math.max(1, values.length - 2);
+      const bin = 1 + Math.floor(seed * spread);
+      const b0 = values[bin] / 255;
+      const b1 = values[Math.max(1, bin - 1)] / 255;
+      const b2 = values[Math.min(values.length - 1, bin + 1)] / 255;
+      // A little neighbor blending keeps the spectrum lively but less jittery.
+      const raw = b0 * 0.62 + b1 * 0.19 + b2 * 0.19;
+      level = Math.pow(Math.max(0, raw), 0.52) * 1.38;
+      level = Math.min(1, level);
+      // Per-bar envelope: staggered response creates an abstract, non-unison look.
+      const ripple = 0.90 + 0.10 * Math.abs(Math.sin(now * (0.004 + seed * 0.006) + i * 1.83));
+      level *= ripple;
+    } else {
+      level = audio.paused
+        ? 0.10
+        : 0.12 + 0.20 * Math.abs(Math.sin(now * (0.008 + seed * 0.01) + i * 1.71));
+    }
+
+    // Keep short bars visible while allowing much taller, aggressive peaks.
+    const barHeight = Math.max(2.5, Math.min(maxBarHeight,
+      2.5 + Math.pow(level, 0.88) * (maxBarHeight - 2.5)));
+    const x = i * barSpacing + (barSpacing - barWidth) / 2;
+    const y = centerY - barHeight / 2;
+    const isCyan = i < count * 0.34;
+
+    waveformContext.save();
+    waveformContext.shadowBlur = isCyan ? 8 : 5;
+    waveformContext.shadowColor = isCyan ? 'rgba(0,220,255,0.85)' : 'rgba(255,255,255,0.62)';
+    waveformContext.fillStyle = isCyan ? 'rgba(0,218,255,0.96)' : 'rgba(255,255,255,0.96)';
     waveformContext.beginPath();
-    const r = Math.min(barWidth / 2, 2);
-    waveformContext.roundRect(x, y, barWidth, barHeight, r);
+    const radius = Math.min(barWidth / 2, 1.3);
+    if (typeof waveformContext.roundRect === 'function') {
+      waveformContext.roundRect(x, y, barWidth, barHeight, radius);
+    } else {
+      waveformContext.rect(x, y, barWidth, barHeight);
+    }
     waveformContext.fill();
+    waveformContext.restore();
   }
 }
-
 async function buildWaveformForTrack(track) {
   waveformPeaks = [];
   drawWaveform();
@@ -3270,10 +3310,10 @@ function ensureAudioAnalyser() {
       for the visual effect requested.
     */
 
-    analyser.fftSize = 128;
+    analyser.fftSize = 256;
 
     analyser.smoothingTimeConstant =
-      0.72;
+      0.48;
 
     analyser.minDecibels =
       -90;
