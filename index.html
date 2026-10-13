@@ -190,15 +190,15 @@ body {
     30px;
 
   border:
-    1px solid rgba(255,255,255,0.16);
+    1px solid rgba(255,255,255,0.24);
 
   border-radius: var(--player-radius);
 
   background:
     linear-gradient(
       180deg,
-      rgba(33,42,49,0.58),
-      rgba(5,20,29,0.62)
+      rgba(42,52,60,0.74),
+      rgba(7,23,33,0.78)
     );
 
   box-shadow:
@@ -1013,8 +1013,8 @@ body {
 }
 
 .control svg {
-  width: 31px;
-  height: 31px;
+  width: 34px;
+  height: 34px;
 
   fill: currentColor;
 }
@@ -1023,12 +1023,11 @@ body {
   width: 72px;
   height: 72px;
 
-  background: rgba(255,255,255,0.95);
+  background: transparent;
 
-  color: #09141b;
+  color: #ffffff;
 
-  box-shadow:
-    0 10px 35px rgba(0,0,0,0.22);
+  box-shadow: none;
 
   transition:
     transform var(--transition-fast),
@@ -1036,14 +1035,14 @@ body {
 }
 
 .control.play:hover {
-  background: #fff;
+  background: transparent;
 
   transform: scale(1.05);
 }
 
 .control.play svg {
-  width: 29px;
-  height: 29px;
+  width: 34px;
+  height: 34px;
 }
 
 /* =========================================================
@@ -1074,11 +1073,11 @@ body {
 
   flex: 1;
 
-  height: 5px;
+  height: 7px;
 
   border-radius: 999px;
 
-  background: rgba(255,255,255,0.17);
+  background: rgba(255,255,255,0.22);
 
   cursor: pointer;
 
@@ -1324,8 +1323,8 @@ body {
   }
 
   .control svg {
-    width: 29px;
-    height: 29px;
+    width: 32px;
+    height: 32px;
   }
 
   .control.play {
@@ -1334,8 +1333,8 @@ body {
   }
 
   .control.play svg {
-    width: 27px;
-    height: 27px;
+    width: 32px;
+    height: 32px;
   }
 
   .volume-section {
