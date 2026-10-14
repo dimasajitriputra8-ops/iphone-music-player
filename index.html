@@ -355,8 +355,8 @@ body {
 }
 
 .island-spectrum {
-  width: 31px;
-  height: 21px;
+  width: 38px;
+  height: 25px;
 
   display: flex;
   align-items: center;
@@ -368,7 +368,7 @@ body {
 }
 
 .island-spectrum span {
-  width: 2px;
+  width: 3px;
   height: 7px;
 
   border-radius: 999px;
@@ -377,7 +377,7 @@ body {
 
   transform-origin: center;
 
-  transition: height 70ms linear;
+  transition: height 45ms linear;
 }
 
 .island-spectrum span:nth-child(1) { height: 5px; }
@@ -817,8 +817,8 @@ body {
 }
 
 .spectrum-mini {
-  width: 32px;
-  height: 16px;
+  width: 42px;
+  height: 21px;
 
   display: flex;
 
@@ -827,7 +827,7 @@ body {
 
   gap: 2px;
 
-  opacity: 0.78;
+  opacity: 0.95;
 
   overflow: hidden;
 }
@@ -835,11 +835,11 @@ body {
 .spectrum-mini span {
   display: block;
 
-  width: 2px;
+  width: 3px;
 
   min-height: 3px;
 
-  max-height: 14px;
+  max-height: 19px;
 
   border-radius: 999px;
 
@@ -848,8 +848,8 @@ body {
   transform-origin: bottom center;
 
   transition:
-    height 70ms linear,
-    opacity 120ms ease;
+    height 45ms linear,
+    opacity 80ms ease;
 }
 
 .spectrum-mini span:nth-child(1) {
@@ -1303,7 +1303,7 @@ body {
     border-radius: 31px;
 
     /* Zoom-out sedikit lebih kecil untuk seluruh kartu beserta isinya. */
-    transform: scale(0.91);
+    transform: scale(0.84);
     transform-origin: top center;
   }
 
@@ -1363,8 +1363,8 @@ body {
   }
 
   .control.play svg {
-    width: 32px;
-    height: 32px;
+    width: 46px;
+    height: 46px;
   }
 
   .volume-section {
@@ -3392,10 +3392,10 @@ function ensureAudioAnalyser() {
       for the visual effect requested.
     */
 
-    analyser.fftSize = 128;
+    analyser.fftSize = 256;
 
     analyser.smoothingTimeConstant =
-      0.72;
+      0.58;
 
     analyser.minDecibels =
       -90;
@@ -3528,6 +3528,7 @@ function drawSpectrum() {
               values.length - 1
             )
           ] / 255;
+        level = Math.min(1, Math.pow(level * 1.45, 0.58));
 
         /*
           Sedikit boost supaya tetap
@@ -3537,8 +3538,8 @@ function drawSpectrum() {
 
         level =
           Math.pow(
-            level,
-            0.68
+            Math.min(1, level * 1.35),
+            0.52
           );
 
       } else {
@@ -3566,8 +3567,8 @@ function drawSpectrum() {
         Math.max(
           3,
           Math.min(
-            14,
-            3 + level * 11
+            19,
+            3 + level * 16
           )
         );
 
@@ -3648,8 +3649,8 @@ function updateIslandSpectrum(values) {
       }
 
       const height =
-        4 +
-        level * 14;
+        3 +
+        Math.min(1, Math.pow(level * 1.45, 0.58)) * 20;
 
       bar.style.height =
         `${height}px`;
